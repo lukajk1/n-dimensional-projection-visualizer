@@ -21,7 +21,6 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -41,7 +40,7 @@ float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
 
 float radius = 4.0f; // rotation radius (adjustable via slider)
-float rotationRate = 0.035f; // radians per second (adjustable via slider)
+float rotationRate = 1.4f; // radians per second (adjustable via slider)
 float cameraPosition = 0.0f; // camera position around origin (0-1)
 bool autoSpin = true; // toggle for automatic camera rotation
 
@@ -93,6 +92,8 @@ int main()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
+    camera.Position = glm::vec3(0.0f, 1.0f, -3.0f);
+    camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // render loop
     // -----------
@@ -104,60 +105,33 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // input
-        // -----
-        processInput(window);
-
         // Clear the screen
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // start camera per frame logic
-        float angle;
-        if (autoSpin)
-        {
-            // Auto-spin mode: use time-based rotation
-            angle = currentFrame * rotationRate;
-            cameraPosition = fmod(angle / (2.0f * 3.14159265f), 1.0f); // Update slider to match
-        }
-        else
-        {
-            // Manual mode: use slider position
-            angle = cameraPosition * 2.0f * 3.14159265f; // Convert 0-1 to 0-2π
-        }
-
-        float camX = sin(angle) * radius;
-        float camZ = cos(angle) * radius;
-
-        // 1. Set the orbiting position
-        camera.Position = glm::vec3(camX, 1.0f, camZ);
-
-        // 2. Force the camera to look at the origin (0, 0, 0)
-        // This calls the new LookAtTarget method which updates Yaw, Pitch, and Front vector.
-        camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-
-        // Setup common view and projection matrices
-        glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
         // Activate shader
         cubeShader->use();
 
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         // set matrix uniforms for model
         cubeShader->setMat4("projection", projection);
         cubeShader->setMat4("view", view);
-        
+
         // set up matrix
         glm::mat4 modelMatrix = glm::mat4(1.0f);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0.2f, 0.2f, 0.25f));
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.7f, 0.7f, 0.7f));
+        modelMatrix = glm::rotate(modelMatrix, currentFrame * rotationRate, glm::vec3(0.0f, 1.0f, 0.4f));
         cubeShader->setMat4("model", modelMatrix);
 
         // Draw the cube
-        glBindVertexArray(cubeVAO);
-        glm::mat4 cubeModel = glm::mat4(1.0f);
-        cubeShader->setMat4("model", cubeModel);
+        glBindVertexArray(cubeVAO); 
+
+        glLineWidth(2.5f);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glPointSize(9.0f);
+        glDrawArrays(GL_POINTS, 0, 36);
 
         //ImGui_ImplOpenGL3_NewFrame();
         //ImGui_ImplGlfw_NewFrame();
@@ -216,23 +190,6 @@ int main()
 
     glfwTerminate();
     return 0;
-}
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
