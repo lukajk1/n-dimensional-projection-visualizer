@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cmath>
 #include <glad/glad.h>
+#include "shader_s.h"
 
 struct RotationPlane {
     int axis1;        // First axis (0=X, 1=Y, 2=Z, 3=W, 4=V, etc.)
@@ -39,6 +40,7 @@ struct NDimObjectData {
     // OpenGL resources
     unsigned int VAO;
     unsigned int VBO;
+    Shader* shader;               // Shader program for this object
 
     // Metadata
     const char* name;             // "Hypercube", "Simplex", "Cross-Polytope"
@@ -121,10 +123,19 @@ struct NDimObjectData {
         glBindVertexArray(0);
     }
 
+    // Initialize shader from paths
+    void initShader() {
+        shader = new Shader(shaderVertPath, shaderFragPath);
+    }
+
     // Cleanup OpenGL resources
     void cleanup() {
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
+        if (shader != nullptr) {
+            delete shader;
+            shader = nullptr;
+        }
     }
 };
 

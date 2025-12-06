@@ -107,6 +107,7 @@ int main()
         identity5D,                  // identityMatrix (will be initialized)
         0,                           // VAO (will be set by setupBuffers)
         0,                           // VBO (will be set by setupBuffers)
+        nullptr,                     // shader (will be initialized by initShader)
         "5D Hypercube",              // name
         "shaders/5d.v",              // shaderVertPath
         "shaders/fragment.f"         // shaderFragPath
@@ -115,8 +116,7 @@ int main()
     // Initialize the object
     hypercube5D.initIdentityMatrix();
     hypercube5D.setupBuffers();
-
-    Shader* shader5D = new Shader(hypercube5D.shaderVertPath, hypercube5D.shaderFragPath);
+    hypercube5D.initShader();
 
     // render loop
     // -----------
@@ -144,7 +144,7 @@ int main()
         camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
         // Activate shader
-        shader5D->use();
+        hypercube5D.shader->use();
 
         // 3D camera matrices
         glm::mat4 view = camera.GetViewMatrix();
@@ -155,9 +155,9 @@ int main()
         float rotation5D[25];
         hypercube5D.buildRotationMatrix(rotation5D, currentFrame);
 
-        shader5D->setFloatArray("rotationMat", rotation5D, 25);
-        shader5D->setMat4("view", view);
-        shader5D->setMat4("projection", projection);
+        hypercube5D.shader->setFloatArray("rotationMat", rotation5D, 25);
+        hypercube5D.shader->setMat4("view", view);
+        hypercube5D.shader->setMat4("projection", projection);
 
         // draw
         glBindVertexArray(hypercube5D.VAO);
@@ -175,7 +175,6 @@ int main()
     }
 
     hypercube5D.cleanup();
-    delete shader5D;
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
