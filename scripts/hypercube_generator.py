@@ -47,12 +47,12 @@ def generate_hypercube_cpp_array(n):
         coords2 = get_coords_from_index(v2_idx, n)
 
         # Format as C++ float strings with 'f' suffix
-        c1_str = ", ".join([f"{x: .4f}f" for x in coords1])
-        c2_str = ", ".join([f"{x: .4f}f" for x in coords2])
+        c1_str = ", ".join([f"{x:.4f}f" for x in coords1])
+        c2_str = ", ".join([f"{x:.4f}f" for x in coords2])
 
-        print(f"    // Edge {edge_idx + 1} (connects vertex {v1_idx} and {v2_idx})")
-        print(f"    {c1_str},")
-        print(f"    {c2_str},")
+        print(f"// Edge {edge_idx + 1} (connects vertex {v1_idx} and {v2_idx})")
+        print(f"{c1_str},")
+        print(f"{c2_str},")
         print("") # Spacing
 
     print("};")
@@ -60,5 +60,5 @@ def generate_hypercube_cpp_array(n):
 # ========= USAGE =========
 # Change N here to generate for different dimensions.
 # N=3 is a standard cube. N=4 is a Tesseract.
-N = 3
+N = 4
 generate_hypercube_cpp_array(N)

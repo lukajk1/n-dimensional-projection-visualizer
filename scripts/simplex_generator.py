@@ -40,9 +40,9 @@ def generate_simplex_cpp_array(n):
         v2 = final_verts[idx2]
 
         # Format Vertex 1
-        v1_str = ", ".join([f"{x: .4f}f" for x in v1])
+        v1_str = ", ".join([f"{x:.4f}f" for x in v1])
         # Format Vertex 2
-        v2_str = ", ".join([f"{x: .4f}f" for x in v2])
+        v2_str = ", ".join([f"{x:.4f}f" for x in v2])
 
         print(f"    // Edge {i+1}")
         print(f"    {v1_str},")
