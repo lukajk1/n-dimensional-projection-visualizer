@@ -139,6 +139,7 @@
     <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="main-2.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\stb_implementation.cpp" />
     <ClCompile Include="src\vertex_data.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="include\filesystem.h" />
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\model.h" />
+    <ClInclude Include="include\ndim_object.h" />
     <ClInclude Include="include\shader_s.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\vertex_data.h" />

@@ -14,3 +14,8 @@ extern const size_t cubeVertices_size;
 extern float hypercubeVerts_4D[];
 extern const size_t hypercubeVerts_4D_size;
 
+extern float hypercubeVerts_5D[];
+extern const size_t hypercubeVerts_5D_size;
+
+extern float hypercubeVerts_6D[];
+extern const size_t hypercubeVerts_6D_size;

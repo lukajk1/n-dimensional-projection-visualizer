@@ -15,7 +15,7 @@ struct NDimObjectData {
     const float* vertices;
     size_t vertexDataSize;        // sizeof(vertices) in bytes
     int vertexCount;              // Total number of vertices
-    int dimension;                // N (2, 3, 4, 5, 6, 7, etc.)
+    int dimensions;                // N (2, 3, 4, 5, 6, 7, etc.)
 
     // Rotation configuration
     const RotationPlane* defaultRotationPlanes;
@@ -27,8 +27,8 @@ struct NDimObjectData {
     const char* shaderFragPath;
 
     // Helper functions
-    int numVec4Groups() const { return (dimension + 3) / 4; }
-    int stride() const { return dimension * sizeof(float); }
+    int numVec4Groups() const { return (dimensions + 3) / 4; }
+    int stride() const { return dimensions * sizeof(float); }
     int attributeOffset(int groupIndex) const {
         return groupIndex * 4 * sizeof(float);
     }
