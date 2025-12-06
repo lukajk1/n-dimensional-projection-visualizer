@@ -18,10 +18,11 @@
 #include "shader_s.h"
 #include "filesystem.h"
 #include "vertex_data.h"
+#include "ndim_object.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-GLuint setBuffers(const float* vertexData, size_t vertexDataSize, int vertexDim, GLuint& outVAO, GLuint& outVBO);
+GLuint setBuffers(const NDimObjectData& objectData, GLuint& outVAO, GLuint& outVBO);
 void drawImGuiElements();
 
 
@@ -87,12 +88,29 @@ int main()
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 
-    Shader* shader4D = new Shader("shaders/4d-2.v", "shaders/fragment.f");
-    int vertexCount = 64;
+    // Define default rotation for 4D hypercube
+    RotationPlane hypercube4D_rotations[] = {
+        {1, 3, 0.7f}  // YW plane rotation at 0.7 rad/s
+    };
 
-    // cube VAO
+    // Create 4D hypercube object data
+    NDimObjectData hypercube4D = {
+        hypercubeVerts_4D,           // vertices
+        hypercubeVerts_4D_size,      // vertexDataSize
+        64,                          // vertexCount
+        4,                           // dimension
+        hypercube4D_rotations,       // defaultRotationPlanes
+        1,                           // numRotationPlanes
+        "4D Hypercube",              // name
+        "shaders/4d-2.v",            // shaderVertPath
+        "shaders/fragment.f"         // shaderFragPath
+    };
+
+    Shader* shader4D = new Shader(hypercube4D.shaderVertPath, hypercube4D.shaderFragPath);
+
+    // Setup VAO/VBO
     GLuint VAO_4D, VBO_4D;
-    setBuffers(hypercubeVerts_4D, hypercubeVerts_4D_size, 4, VAO_4D, VBO_4D);
+    setBuffers(hypercube4D, VAO_4D, VBO_4D);
 
     // render loop
     // -----------
@@ -126,19 +144,28 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-        // 4D rotation matrix (rotate in XW plane)
+        // Build rotation matrix from default rotation planes
         glm::mat4 rotation4D = glm::mat4(1.0f);
 
-        // for a rotation through ANY plane ij all you need is:
-        // rotMatrix[i][i] = cos(angle)
-        // rotMatrix[i][j] = -sin(angle)
-        // rotMatrix[j][i] = sin(angle)
-        // rotMatrix[j][j] = cos(angle)
+        // Apply all rotation planes defined in the object data
+        for (int p = 0; p < hypercube4D.numRotationPlanes; p++) {
+            const RotationPlane& plane = hypercube4D.defaultRotationPlanes[p];
+            float planeAngle = currentFrame * plane.speed;
 
-        rotation4D[1][1] = cos(angle);
-        rotation4D[1][3] = -sin(angle);
-        rotation4D[3][1] = sin(angle);
-        rotation4D[3][3] = cos(angle);
+            int i = plane.axis1;
+            int j = plane.axis2;
+
+            // For a rotation through ANY plane ij:
+            // rotMatrix[i][i] = cos(angle)
+            // rotMatrix[i][j] = -sin(angle)
+            // rotMatrix[j][i] = sin(angle)
+            // rotMatrix[j][j] = cos(angle)
+
+            rotation4D[i][i] = cos(planeAngle);
+            rotation4D[i][j] = -sin(planeAngle);
+            rotation4D[j][i] = sin(planeAngle);
+            rotation4D[j][j] = cos(planeAngle);
+        }
 
         // Convert mat4 to float array (glm matrices are column-major, but we need row-major for our shader)
         float rotation4DArray[16];
@@ -156,10 +183,10 @@ int main()
         glBindVertexArray(VAO_4D);
 
         glLineWidth(4.5f);
-        glDrawArrays(GL_LINES, 0, vertexCount);  
+        glDrawArrays(GL_LINES, 0, hypercube4D.vertexCount);
 
         glPointSize(12.0f);
-        glDrawArrays(GL_POINTS, 0, vertexCount);  
+        glDrawArrays(GL_POINTS, 0, hypercube4D.vertexCount);  
 
         drawImGuiElements();
 
@@ -179,16 +206,34 @@ int main()
     return 0;
 }
 
-GLuint setBuffers(const float* vertexData, size_t vertexDataSize, int vertexDim, GLuint& outVAO, GLuint& outVBO) {
+GLuint setBuffers(const NDimObjectData& objectData, GLuint& outVAO, GLuint& outVBO) {
     glGenVertexArrays(1, &outVAO);
     glGenBuffers(1, &outVBO);
 
     glBindVertexArray(outVAO);
     glBindBuffer(GL_ARRAY_BUFFER, outVBO);
-    glBufferData(GL_ARRAY_BUFFER, vertexDataSize, vertexData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, objectData.vertexDataSize, objectData.vertices, GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0); // enable vertex attribute @ location 0
-    glVertexAttribPointer(0, vertexDim, GL_FLOAT, GL_FALSE, vertexDim * sizeof(float), (void*)0);
+    // Set up vertex attributes based on dimension
+    int numVec4Groups = objectData.numVec4Groups();
+
+    for (int i = 0; i < numVec4Groups; i++) {
+        glEnableVertexAttribArray(i);
+
+        // Calculate how many components in this vec4 (could be less than 4 for the last group)
+        int componentsInThisGroup = (i == numVec4Groups - 1 && objectData.dimension % 4 != 0)
+            ? objectData.dimension % 4
+            : 4;
+
+        glVertexAttribPointer(
+            i,                                    // attribute location
+            componentsInThisGroup,                // number of components (1-4)
+            GL_FLOAT,                             // type
+            GL_FALSE,                             // normalized?
+            objectData.stride(),                  // stride
+            (void*)objectData.attributeOffset(i)  // offset
+        );
+    }
 
     // unbind active vao
     glBindVertexArray(0);
@@ -196,7 +241,6 @@ GLuint setBuffers(const float* vertexData, size_t vertexDataSize, int vertexDim,
 }
 
 void drawImGuiElements() {
-    // imgui stuff
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -223,7 +267,7 @@ void drawImGuiElements() {
     ImGui::Text("Dimensions");
     ImGui::Spacing();
     const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7" };
-    int currentModelShaderIndex = 0;
+    int currentModelShaderIndex = 2;
     if (ImGui::Combo("##Dimensions", &currentModelShaderIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
         std::cout << "option was selected" << std::endl;
