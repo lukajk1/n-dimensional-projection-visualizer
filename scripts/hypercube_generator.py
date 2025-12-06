@@ -60,5 +60,5 @@ def generate_hypercube_cpp_array(n):
 # ========= USAGE =========
 # Change N here to generate for different dimensions.
 # N=3 is a standard cube. N=4 is a Tesseract.
-N = 4
+N = 5
 generate_hypercube_cpp_array(N)

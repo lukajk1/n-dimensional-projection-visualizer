@@ -30,18 +30,19 @@ const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
 const unsigned int IMGUI_WINDOW_WIDTH = 180;
-const unsigned int IMGUI_WINDOW_HEIGHT = 180;
+const unsigned int IMGUI_WINDOW_HEIGHT = 300;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 1.0f, -5.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
-bool firstMouse = true;
 
-float radius = 4.0f; // rotation radius (adjustable via slider)
-float rotationRate = 0.7f; // radians per second (adjustable via slider)
-float cameraPosition = 0.0f; // camera position around origin (0-1)
-bool autoSpin = true; // toggle for automatic camera rotation
+float camRotRadius = 4.0f; // rotation radius (adjustable via slider)
+float camRotSpeed = 0.7f; // radians per second (adjustable via slider)
+float camPos = 0.0f; // camera position around origin (0-1)
+
+// global
+float rotationRate = 0.7f;
 
 // timing
 float deltaTime = 0.0f;
@@ -60,7 +61,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ShaderDemos", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Higher Dimensions", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -93,9 +94,6 @@ int main()
     GLuint VAO_4D, VBO_4D;
     setBuffers(hypercubeVerts_4D, hypercubeVerts_4D_size, 4, VAO_4D, VBO_4D);
 
-    camera.Position = glm::vec3(0.0f, 1.0f, -5.0f);
-    camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -115,6 +113,12 @@ int main()
             lastFPSTime = currentTime;
         }
 
+        float angle = currentFrame * rotationRate;
+        // 
+        camera.Position.x = camRotRadius * cos(angle);
+        camera.Position.z = camRotRadius * sin(angle);
+        camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
+
         // Activate shader
         shader4D->use();
 
@@ -123,7 +127,6 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         // 4D rotation matrix (rotate in XW plane)
-        float angle = currentFrame * rotationRate;
         glm::mat4 rotation4D = glm::mat4(1.0f);
 
         // for a rotation through ANY plane ij all you need is:
@@ -144,10 +147,10 @@ int main()
         // draw
         glBindVertexArray(VAO_4D);
 
-        glLineWidth(2.5f);
+        glLineWidth(4.5f);
         glDrawArrays(GL_LINES, 0, vertexCount);  
 
-        glPointSize(9.0f);
+        glPointSize(12.0f);
         glDrawArrays(GL_POINTS, 0, vertexCount);  
 
         drawImGuiElements();
