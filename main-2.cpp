@@ -22,7 +22,6 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-GLuint setBuffers(const NDimObjectData& objectData, GLuint& outVAO, GLuint& outVBO);
 void drawImGuiElements();
 
 
@@ -94,24 +93,30 @@ int main()
         {0, 4, 0.3f}   // XV plane rotation at 0.3 rad/s
     };
 
+    // Allocate space for 5x5 identity matrix
+    static float identity5D[25];
+
     // Create 5D hypercube object data
     NDimObjectData hypercube5D = {
         hypercubeVerts_5D,           // vertices
         hypercubeVerts_5D_size,      // vertexDataSize
         160,                         // vertexCount (5D hypercube has 32 vertices, 80 edges, 160 vertices for GL_LINES)
-        5,                           // dimension
+        5,                           // dimensions
         hypercube5D_rotations,       // defaultRotationPlanes
         2,                           // numRotationPlanes
+        identity5D,                  // identityMatrix (will be initialized)
+        0,                           // VAO (will be set by setupBuffers)
+        0,                           // VBO (will be set by setupBuffers)
         "5D Hypercube",              // name
         "shaders/5d.v",              // shaderVertPath
         "shaders/fragment.f"         // shaderFragPath
     };
 
-    Shader* shader5D = new Shader(hypercube5D.shaderVertPath, hypercube5D.shaderFragPath);
+    // Initialize the object
+    hypercube5D.initIdentityMatrix();
+    hypercube5D.setupBuffers();
 
-    // Setup VAO/VBO
-    GLuint VAO_5D, VBO_5D;
-    setBuffers(hypercube5D, VAO_5D, VBO_5D);
+    Shader* shader5D = new Shader(hypercube5D.shaderVertPath, hypercube5D.shaderFragPath);
 
     // render loop
     // -----------
@@ -145,43 +150,17 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-        // Build 5x5 rotation matrix from default rotation planes
-        float rotation5D[25] = {
-            1, 0, 0, 0, 0,
-            0, 1, 0, 0, 0,
-            0, 0, 1, 0, 0,
-            0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1
-        };
-
-        // Apply all rotation planes defined in the object data
-        for (int p = 0; p < hypercube5D.numRotationPlanes; p++) {
-            const RotationPlane& plane = hypercube5D.defaultRotationPlanes[p];
-            float planeAngle = currentFrame * plane.speed;
-
-            int i = plane.axis1;
-            int j = plane.axis2;
-
-            // For a rotation through ANY plane ij in an identity matrix:
-            // rotMatrix[i][i] = cos(angle)
-            // rotMatrix[i][j] = -sin(angle)
-            // rotMatrix[j][i] = sin(angle)
-            // rotMatrix[j][j] = cos(angle)
-
-            // For multiple rotations, we need to compose them
-            // For simplicity, we'll just apply them sequentially (not strictly correct but works for demo)
-            rotation5D[i * 5 + i] = cos(planeAngle);
-            rotation5D[i * 5 + j] = -sin(planeAngle);
-            rotation5D[j * 5 + i] = sin(planeAngle);
-            rotation5D[j * 5 + j] = cos(planeAngle);
-        }
+        // Build rotation matrix using object's method
+        // can't just assign an array to the return of the function since it has to be genericized and I don't want to deal with that
+        float rotation5D[25];
+        hypercube5D.buildRotationMatrix(rotation5D, currentFrame);
 
         shader5D->setFloatArray("rotationMat", rotation5D, 25);
         shader5D->setMat4("view", view);
         shader5D->setMat4("projection", projection);
 
         // draw
-        glBindVertexArray(VAO_5D);
+        glBindVertexArray(hypercube5D.VAO);
 
         glLineWidth(4.5f);
         glDrawArrays(GL_LINES, 0, hypercube5D.vertexCount);
@@ -195,8 +174,7 @@ int main()
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO_5D);
-    glDeleteBuffers(1, &VBO_5D);
+    hypercube5D.cleanup();
     delete shader5D;
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -205,40 +183,6 @@ int main()
 
     glfwTerminate();
     return 0;
-}
-
-GLuint setBuffers(const NDimObjectData& objectData, GLuint& outVAO, GLuint& outVBO) {
-    glGenVertexArrays(1, &outVAO);
-    glGenBuffers(1, &outVBO);
-
-    glBindVertexArray(outVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, outVBO);
-    glBufferData(GL_ARRAY_BUFFER, objectData.vertexDataSize, objectData.vertices, GL_STATIC_DRAW);
-
-    // Set up vertex attributes based on dimension
-    int numVec4Groups = objectData.numVec4Groups();
-
-    for (int i = 0; i < numVec4Groups; i++) {
-        glEnableVertexAttribArray(i);
-
-        // Calculate how many components in this vec4 (could be less than 4 for the last group)
-        int componentsInThisGroup = (i == numVec4Groups - 1 && objectData.dimensions % 4 != 0)
-            ? objectData.dimensions % 4
-            : 4;
-
-        glVertexAttribPointer(
-            i,                                    // attribute location
-            componentsInThisGroup,                // number of components (1-4)
-            GL_FLOAT,                             // type
-            GL_FALSE,                             // normalized?
-            objectData.stride(),                  // stride
-            (void*)objectData.attributeOffset(i)  // offset
-        );
-    }
-
-    // unbind active vao
-    glBindVertexArray(0);
-    return outVAO;
 }
 
 void drawImGuiElements() {
