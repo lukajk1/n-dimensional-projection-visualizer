@@ -1,9 +1,0 @@
-#version 330 core
-out vec4 FragColor;
-
-in vec3 FragPos;
-
-void main()
-{    
-    FragColor = vec4(.75, 0., 0., 1.);
-}

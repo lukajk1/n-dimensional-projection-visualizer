@@ -86,29 +86,26 @@ int main()
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 
-    Shader* cubeShader = new Shader("shaders/model.v", "shaders/model.f");
+    Shader* shader4D = new Shader("shaders/4d.v", "shaders/fragment.f");
     int vertexCount = 64;
 
     // cube VAO
     GLuint VAO_4D, VBO_4D;
     setBuffers(hypercubeVerts_4D, hypercubeVerts_4D_size, 4, VAO_4D, VBO_4D);
 
-    camera.Position = glm::vec3(0.0f, 1.0f, -3.0f);
+    camera.Position = glm::vec3(0.0f, 1.0f, -5.0f);
     camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-        // per-frame time logic
-        // --------------------
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
-        // Clear the screen
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         frameCount++;
         double currentTime = glfwGetTime();
@@ -119,17 +116,30 @@ int main()
         }
 
         // Activate shader
-        cubeShader->use();
+        shader4D->use();
+
+        // 3D camera matrices
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 modelMatrix = glm::mat4(1.0f);
 
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.6f));
-        modelMatrix = glm::rotate(modelMatrix, currentFrame * rotationRate, glm::vec3(0.0f, 1.0f, 0.0f));
-        
-        cubeShader->setMat4("model", modelMatrix);
-        cubeShader->setMat4("view", view);
-        cubeShader->setMat4("projection", projection);
+        // 4D rotation matrix (rotate in XW plane)
+        float angle = currentFrame * rotationRate;
+        glm::mat4 rotation4D = glm::mat4(1.0f);
+
+        // for a rotation through ANY plane ij all you need is:
+        // rotMatrix[i][i] = cos(angle)
+        // rotMatrix[i][j] = -sin(angle)
+        // rotMatrix[j][i] = sin(angle)
+        // rotMatrix[j][j] = cos(angle)
+
+        rotation4D[1][1] = cos(angle); 
+        rotation4D[1][3] = -sin(angle);
+        rotation4D[3][1] = sin(angle); 
+        rotation4D[3][3] = cos(angle); 
+
+        shader4D->setMat4("rotation4", rotation4D);
+        shader4D->setMat4("view", view);
+        shader4D->setMat4("projection", projection);
 
         // draw
         glBindVertexArray(VAO_4D);
@@ -148,7 +158,7 @@ int main()
 
     glDeleteVertexArrays(1, &VAO_4D);
     glDeleteBuffers(1, &VBO_4D);
-    delete cubeShader;
+    delete shader4D;
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -210,6 +220,12 @@ void drawImGuiElements() {
     ImGui::Spacing();
     ImGui::Spacing();
 
+    // Camera Zoom
+    ImGui::Text("Camera Zoom");
+    ImGui::Spacing();
+    ImGui::SliderFloat("##Zoom", &camera.Zoom, 1.0f, 90.0f);
+    ImGui::Spacing();
+    ImGui::Spacing();
 
     // clean up
     ImGui::End();
