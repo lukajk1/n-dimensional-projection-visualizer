@@ -114,6 +114,11 @@ public:
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
     }
 
+    void setFloatArray(const std::string& name, const float* values, int count) const
+    {
+        glUniform1fv(glGetUniformLocation(ID, name.c_str()), count, values);
+    }
+
 private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------

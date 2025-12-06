@@ -87,7 +87,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 
-    Shader* shader4D = new Shader("shaders/4d.v", "shaders/fragment.f");
+    Shader* shader4D = new Shader("shaders/4d-2.v", "shaders/fragment.f");
     int vertexCount = 64;
 
     // cube VAO
@@ -135,12 +135,20 @@ int main()
         // rotMatrix[j][i] = sin(angle)
         // rotMatrix[j][j] = cos(angle)
 
-        rotation4D[1][1] = cos(angle); 
+        rotation4D[1][1] = cos(angle);
         rotation4D[1][3] = -sin(angle);
-        rotation4D[3][1] = sin(angle); 
-        rotation4D[3][3] = cos(angle); 
+        rotation4D[3][1] = sin(angle);
+        rotation4D[3][3] = cos(angle);
 
-        shader4D->setMat4("rotation4", rotation4D);
+        // Convert mat4 to float array (glm matrices are column-major, but we need row-major for our shader)
+        float rotation4DArray[16];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                rotation4DArray[i * 4 + j] = rotation4D[j][i]; // Transpose: column-major to row-major
+            }
+        }
+
+        shader4D->setFloatArray("rotation4", rotation4DArray, 16);
         shader4D->setMat4("view", view);
         shader4D->setMat4("projection", projection);
 
