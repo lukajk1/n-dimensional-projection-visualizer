@@ -27,11 +27,7 @@ const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
 const unsigned int IMGUI_WINDOW_WIDTH = 180;
-const unsigned int IMGUI_WINDOW_HEIGHT = 650;
-
-// light
-const glm::vec3 LIGHT_POSITION = glm::vec3(-1.0f, 1.0f, 1.0f);
-const glm::vec3 LIGHT_SCALE = glm::vec3(.25f);
+const unsigned int IMGUI_WINDOW_HEIGHT = 180;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -47,6 +43,21 @@ bool autoSpin = true; // toggle for automatic camera rotation
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+// fps calculation
+int frameCount = 0;
+double lastFPSTime = 0.0;
+double currentFPS = 0.0;
+
+float triVerts[] = {   
+     -0.5f,  0.0f, 0.0f,
+     0.5f,  0.0f, 0.0f,
+
+     0.5f,  0.0f, 0.0f,
+     0.0f, -0.5f, 0.0f,
+
+     0.0f, -0.5f, 0.0f,
+     -0.5f,  0.0f, 0.0f,
+};
 
 int main()
 {
@@ -88,7 +99,9 @@ int main()
     glGenBuffers(1, &cubeVBO);
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, cubeVertices_size, &cubeVertices, GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, cubeVertices_size, &cubeVertices, GL_STATIC_DRAW);
+    size_t triVerts_size = sizeof(triVerts);
+    glBufferData(GL_ARRAY_BUFFER, triVerts_size, &triVerts, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
@@ -109,6 +122,14 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        frameCount++;
+        double currentTime = glfwGetTime();
+        if (currentTime - lastFPSTime >= 1.0) {  // Update every second
+            currentFPS = frameCount / (currentTime - lastFPSTime);
+            frameCount = 0;
+            lastFPSTime = currentTime;
+        }
+
         // Activate shader
         cubeShader->use();
 
@@ -121,59 +142,58 @@ int main()
         // set up matrix
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.7f, 0.7f, 0.7f));
-        modelMatrix = glm::rotate(modelMatrix, currentFrame * rotationRate, glm::vec3(0.0f, 1.0f, 0.4f));
+        modelMatrix = glm::rotate(modelMatrix, currentFrame * rotationRate, glm::vec3(0.0f, 1.0f, 0.0f));
         cubeShader->setMat4("model", modelMatrix);
 
-        // Draw the cube
-        glBindVertexArray(cubeVAO); 
+        // Draw the triangle
+        glBindVertexArray(cubeVAO);
 
         glLineWidth(2.5f);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_LINES, 0, 6);  // Only 6 vertices in triVerts
 
         glPointSize(9.0f);
-        glDrawArrays(GL_POINTS, 0, 36);
+        glDrawArrays(GL_POINTS, 0, 6);  // Only 6 vertices in triVerts
 
-        //ImGui_ImplOpenGL3_NewFrame();
-        //ImGui_ImplGlfw_NewFrame();
-        //ImGui::NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        //// Shader Selection Window
-        //ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, IMGUI_WINDOW_HEIGHT), ImGuiCond_Always);
-        //ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - IMGUI_WINDOW_WIDTH - 20, 20), ImGuiCond_Always);
-        //ImGui::Begin("ShaderDemos", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+        // Shader Selection Window
+        ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, IMGUI_WINDOW_HEIGHT), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - IMGUI_WINDOW_WIDTH - 20, 20), ImGuiCond_Always);
+        ImGui::Begin("ShaderDemos", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
-        //// Model selection dropdown
-        //ImGui::Text("Model");
-        //ImGui::Spacing();
-        //if (ImGui::Combo("##Model", &currentModelIndex, modelNames, IM_ARRAYSIZE(modelNames)))
-        //{
-        //    // Model selection changed, reload the model
-        //    delete ourModel;
-        //    ourModel = new Model(modelPaths[currentModelIndex]);
-        //    std::cout << "Switched to model: " << modelNames[currentModelIndex] << std::endl;
-        //}
-        //ImGui::Spacing();
-        //ImGui::Spacing();
+        ImGui::Text("FPS: %.1f", currentFPS);
+        ImGui::Spacing();
 
-        //// Model shader dropdown
-        //int previousModelShaderIndex = currentModelShaderIndex;
+        // Model selection dropdown
+        ImGui::Text("Dimensions");
+        ImGui::Spacing();
+        // name, starting index, array of char* options
+        const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7" };
+        int currentModelShaderIndex = 0;
+        if (ImGui::Combo("##Dimensions", &currentModelShaderIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
+        {
+            std::cout << "option was selected" << std::endl;
+        }
+        ImGui::Spacing();
+        ImGui::Spacing();
 
-        //ImGui::Text("Model Shader");
-        //ImGui::Spacing();
-        //if (ImGui::Combo("##ModelShader", &currentModelShaderIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
-        //{
-        //    // Shader selection changed, reload the shader
-        //    delete modelShader;
-        //    modelShader = new Shader("Shaders/model/model.v", modelShaderPaths[currentModelShaderIndex]);
-        //    std::cout << "Switched to model shader: " << modelShaderNames[currentModelShaderIndex] << std::endl;
-        //}
-        //ImGui::Spacing();
-        //ImGui::Spacing();
-        //ImGui::End();
+        ImGui::Text("Family");
+        ImGui::Spacing();
+        // name, starting index, array of char* options
+        const char* shapesList[] = { "Hybercube", "Simplex", "Cross-Polytope" };
+        int shapesIndex = 0;
+        if (ImGui::Combo("##Object", &shapesIndex, shapesList, IM_ARRAYSIZE(shapesList)))
+        {
+            std::cout << "option was selected" << std::endl;
+        }
+        ImGui::Spacing();
+        ImGui::Spacing();
 
-        //// imgui draw
-        //ImGui::Render();
-        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 
         glfwSwapBuffers(window);
