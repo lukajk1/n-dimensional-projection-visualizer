@@ -198,7 +198,7 @@ void drawImGuiElements() {
     // family
     ImGui::Text("Family");
     ImGui::Spacing();
-    const char* shapesList[] = { "Hybercube", "Simplex", "Cross-Polytope" };
+    const char* shapesList[] = { "Hypercube", "Hypersphere", "Simplex", "Cross-Polytope" };
     int shapesIndex = 0;
     if (ImGui::Combo("##Object", &shapesIndex, shapesList, IM_ARRAYSIZE(shapesList)))
     {
