@@ -160,13 +160,7 @@ int main()
         hypercube5D.shader->setMat4("projection", projection);
 
         // draw
-        glBindVertexArray(hypercube5D.VAO);
-
-        glLineWidth(4.5f);
-        glDrawArrays(GL_LINES, 0, hypercube5D.vertexCount);
-
-        glPointSize(12.0f);
-        glDrawArrays(GL_POINTS, 0, hypercube5D.vertexCount);
+        hypercube5D.draw();
 
         drawImGuiElements();
 

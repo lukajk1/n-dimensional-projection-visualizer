@@ -128,6 +128,17 @@ struct NDimObjectData {
         shader = new Shader(shaderVertPath, shaderFragPath);
     }
 
+    // Draw the object
+    void draw() const {
+        glBindVertexArray(VAO);
+
+        glLineWidth(4.5f);
+        glDrawArrays(GL_LINES, 0, vertexCount);
+
+        glPointSize(12.0f);
+        glDrawArrays(GL_POINTS, 0, vertexCount);
+    }
+
     // Cleanup OpenGL resources
     void cleanup() {
         glDeleteVertexArrays(1, &VAO);
