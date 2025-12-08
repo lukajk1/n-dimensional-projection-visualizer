@@ -1,5 +1,30 @@
 #include "vertex_data.h"
 
+// 2-Cube (Hypercube) Wireframe Pairs
+// Dimension: 2
+// Total Vertices: 4
+// Total Edges: 4
+// Total Floats: 16
+float hypercubeVerts_2D[] = {
+    // Edge 1 (connects vertex 0 and 1)
+    -1.0000f, -1.0000f,
+    1.0000f, -1.0000f,
+
+    // Edge 2 (connects vertex 0 and 2)
+    -1.0000f, -1.0000f,
+    -1.0000f, 1.0000f,
+
+    // Edge 3 (connects vertex 1 and 3)
+    1.0000f, -1.0000f,
+    1.0000f, 1.0000f,
+
+    // Edge 4 (connects vertex 2 and 3)
+    -1.0000f, 1.0000f,
+    1.0000f, 1.0000f,
+
+};
+const size_t hypercubeVerts_2D_size = sizeof(hypercubeVerts_2D);
+
 float hypercubeVerts_3D[] = {
     // Edge 1 (connects vertex 0 and 1)
     -1.0000f, -1.0000f, -1.0000f,

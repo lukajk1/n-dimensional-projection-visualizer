@@ -91,7 +91,11 @@ int main()
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 
-    // Initialize both hypercube objects
+    // Initialize all hypercube objects
+    hypercube3D.initIdentityMatrix();
+    hypercube3D.setupBuffers();
+    hypercube3D.initShader();
+
     hypercube4D.initIdentityMatrix();
     hypercube4D.setupBuffers();
     hypercube4D.initShader();
@@ -100,8 +104,8 @@ int main()
     hypercube5D.setupBuffers();
     hypercube5D.initShader();
 
-    // Set initial object to 5D
-    currentObject = &hypercube5D;
+    // Set initial object to 3D
+    currentObject = &hypercube3D;
 
     // render loop
     // -----------
@@ -154,6 +158,7 @@ int main()
         glfwPollEvents();
     }
 
+    hypercube3D.cleanup();
     hypercube4D.cleanup();
     hypercube5D.cleanup();
 
@@ -194,7 +199,10 @@ void drawImGuiElements() {
     if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
         // Switch between objects based on selection
-        if (currentDimensionIndex == 2) {  // 4D
+        if (currentDimensionIndex == 1) {  // 3D
+            currentObject = &hypercube3D;
+        }
+        else if (currentDimensionIndex == 2) {  // 4D
             currentObject = &hypercube4D;
         }
         else if (currentDimensionIndex == 3) {  // 5D

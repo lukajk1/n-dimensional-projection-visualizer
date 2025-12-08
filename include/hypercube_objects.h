@@ -5,6 +5,7 @@
 #include "ndim_object.h"
 
 // Extern declarations for hypercube objects
+extern NDimObjectData hypercube3D;
 extern NDimObjectData hypercube4D;
 extern NDimObjectData hypercube5D;
 
