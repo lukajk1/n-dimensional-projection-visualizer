@@ -92,6 +92,10 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     // Initialize all hypercube objects
+    hypercube2D.initIdentityMatrix();
+    hypercube2D.setupBuffers();
+    hypercube2D.initShader();
+
     hypercube3D.initIdentityMatrix();
     hypercube3D.setupBuffers();
     hypercube3D.initShader();
@@ -127,8 +131,8 @@ int main()
         }
 
         float angle = currentFrame * rotationRate;
-        camera.Position.x = camRotRadius * cos(angle);
-        camera.Position.z = camRotRadius * sin(angle);
+        /*camera.Position.x = camRotRadius * cos(angle);
+        camera.Position.z = camRotRadius * sin(angle);*/
         camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
         // imgui pass 
@@ -158,6 +162,7 @@ int main()
         glfwPollEvents();
     }
 
+    hypercube2D.cleanup();
     hypercube3D.cleanup();
     hypercube4D.cleanup();
     hypercube5D.cleanup();
@@ -199,7 +204,10 @@ void drawImGuiElements() {
     if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
         // Switch between objects based on selection
-        if (currentDimensionIndex == 1) {  // 3D
+        if (currentDimensionIndex == 0) {  // 2D
+            currentObject = &hypercube2D;
+        }
+        else if (currentDimensionIndex == 1) {  // 3D
             currentObject = &hypercube3D;
         }
         else if (currentDimensionIndex == 2) {  // 4D

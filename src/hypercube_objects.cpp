@@ -1,6 +1,30 @@
 #include "ndim_object.h"
 #include "vertex_data.h"
 
+// 2D Hypercube Construction
+RotationPlane hypercube2D_rotations[] = {
+    {0, 1, 0.5f}  // XY plane rotation at 0.5 rad/s
+};
+
+static float identity2D[4];
+
+NDimObjectData hypercube2D = {
+    hypercubeVerts_2D,           // vertices
+    hypercubeVerts_2D_size,      // vertexDataSize
+    8,                           // vertexCount (2D square has 4 vertices, 4 edges, 8 vertices for GL_LINES)
+    2,                           // dimensions
+    hypercube2D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity2D,                  // identityMatrix (will be initialized)
+    1.0f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "2D Hypercube",              // name
+    "shaders/2d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
 // 3D Hypercube Construction
 RotationPlane hypercube3D_rotations[] = {
     {0, 1, 0.4f}  // XY plane rotation at 0.4 rad/s
