@@ -108,6 +108,10 @@ int main()
     hypercube5D.setupBuffers();
     hypercube5D.initShader();
 
+    hypercube7D.initIdentityMatrix();
+    hypercube7D.setupBuffers();
+    hypercube7D.initShader();
+
     // Set initial object to 3D
     currentObject = &hypercube3D;
 
@@ -166,6 +170,7 @@ int main()
     hypercube3D.cleanup();
     hypercube4D.cleanup();
     hypercube5D.cleanup();
+    hypercube7D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -215,6 +220,9 @@ void drawImGuiElements() {
         }
         else if (currentDimensionIndex == 3) {  // 5D
             currentObject = &hypercube5D;
+        }
+        else if (currentDimensionIndex == 5) {  // 7D
+            currentObject = &hypercube7D;
         }
         // Can add more dimensions here as they're implemented
     }

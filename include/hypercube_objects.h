@@ -9,5 +9,6 @@ extern NDimObjectData hypercube2D;
 extern NDimObjectData hypercube3D;
 extern NDimObjectData hypercube4D;
 extern NDimObjectData hypercube5D;
+extern NDimObjectData hypercube7D;
 
 #endif
