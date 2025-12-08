@@ -31,6 +31,27 @@ extern const size_t hypercubeVerts_7D_size;
 extern float hypercubeVerts_8D[];
 extern const size_t hypercubeVerts_8D_size;
 
+extern float crossPolytopeVerts_2D[];
+extern const size_t crossPolytopeVerts_2D_size;
+
+extern float crossPolytopeVerts_3D[];
+extern const size_t crossPolytopeVerts_3D_size;
+
+extern float crossPolytopeVerts_4D[];
+extern const size_t crossPolytopeVerts_4D_size;
+
+extern float crossPolytopeVerts_5D[];
+extern const size_t crossPolytopeVerts_5D_size;
+
+extern float crossPolytopeVerts_6D[];
+extern const size_t crossPolytopeVerts_6D_size;
+
+extern float crossPolytopeVerts_7D[];
+extern const size_t crossPolytopeVerts_7D_size;
+
+extern float crossPolytopeVerts_8D[];
+extern const size_t crossPolytopeVerts_8D_size;
+
 extern float simplexVerts_3D[];
 extern const size_t simplexVerts_3D_size;
 

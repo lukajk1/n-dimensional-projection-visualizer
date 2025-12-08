@@ -22,7 +22,7 @@ NDimObjectData hypercube2D = {
     nullptr,                     // shader (will be initialized by initShader)
     "2D Hypercube",              // name
     "shaders/2d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 2D Simplex Construction
@@ -42,13 +42,53 @@ NDimObjectData simplex2D = {
     nullptr,                     // shader (will be initialized by initShader)
     "2D Simplex",              // name
     "shaders/2d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
+};
+
+// 2D Cross-Polytope Construction
+static float identity2D_cross[4];
+
+NDimObjectData crossPolytope2D = {
+    crossPolytopeVerts_2D,       // vertices
+    crossPolytopeVerts_2D_size,  // vertexDataSize
+    8,                           // vertexCount (2D cross-polytope has 4 vertices, 4 edges, 8 vertices for GL_LINES)
+    2,                           // dimensions
+    hypercube2D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity2D_cross,            // identityMatrix (will be initialized)
+    1.0f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "2D Cross-Polytope",         // name
+    "shaders/2d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
 };
 
 // 3D Hypercube Construction
 RotationPlane hypercube3D_rotations[] = {
     {0, 1, 0.4f}  // XY plane rotation at 0.4 rad/s
 };
+// 3D Cross-Polytope Construction
+static float identity3D_cross[9];
+
+NDimObjectData crossPolytope3D = {
+    crossPolytopeVerts_3D,       // vertices
+    crossPolytopeVerts_3D_size,  // vertexDataSize
+    24,                          // vertexCount (3D cross-polytope has 6 vertices, 12 edges, 24 vertices for GL_LINES)
+    3,                           // dimensions
+    hypercube3D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity3D_cross,            // identityMatrix (will be initialized)
+    1.2f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "3D Cross-Polytope",         // name
+    "shaders/3d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
+};
+
 
 static float identity3D[9];
 
@@ -66,7 +106,7 @@ NDimObjectData hypercube3D = {
     nullptr,                     // shader (will be initialized by initShader)
     "3D Hypercube",              // name
     "shaders/3d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 
@@ -92,7 +132,7 @@ NDimObjectData hypercube4D = {
     nullptr,                     // shader (will be initialized by initShader)
     "4D Hypercube",              // name
     "shaders/4d.v",            // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 5D Hypercube Construction
@@ -117,7 +157,7 @@ NDimObjectData hypercube5D = {
     nullptr,                     // shader (will be initialized by initShader)
     "5D Hypercube",              // name
     "shaders/5d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 6D Hypercube Construction
@@ -143,7 +183,7 @@ NDimObjectData hypercube6D = {
     nullptr,                     // shader (will be initialized by initShader)
     "6D Hypercube",              // name
     "shaders/6d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 7D Hypercube Construction
@@ -169,7 +209,7 @@ NDimObjectData hypercube7D = {
     nullptr,                     // shader (will be initialized by initShader)
     "7D Hypercube",              // name
     "shaders/7d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 8D Hypercube Construction
@@ -196,7 +236,7 @@ NDimObjectData hypercube8D = {
     nullptr,                     // shader (will be initialized by initShader)
     "8D Hypercube",              // name
     "shaders/8d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 NDimObjectData simplex3D = {
@@ -213,7 +253,7 @@ NDimObjectData simplex3D = {
     nullptr,                     // shader (will be initialized by initShader)
     "3D Simplex",              // name
     "shaders/3d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 4D Simplex Construction
@@ -233,7 +273,7 @@ NDimObjectData simplex4D = {
     nullptr,                     // shader (will be initialized by initShader)
     "4D Simplex",              // name
     "shaders/4d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 5D Simplex Construction
@@ -253,7 +293,7 @@ NDimObjectData simplex5D = {
     nullptr,                     // shader (will be initialized by initShader)
     "5D Simplex",              // name
     "shaders/5d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 6D Simplex Construction
@@ -273,7 +313,7 @@ NDimObjectData simplex6D = {
     nullptr,                     // shader (will be initialized by initShader)
     "6D Simplex",              // name
     "shaders/6d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 7D Simplex Construction
@@ -293,7 +333,7 @@ NDimObjectData simplex7D = {
     nullptr,                     // shader (will be initialized by initShader)
     "7D Simplex",              // name
     "shaders/7d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
 };
 
 // 8D Simplex Construction
@@ -307,11 +347,111 @@ NDimObjectData simplex8D = {
     hypercube8D_rotations,       // defaultRotationPlanes
     4,                           // numRotationPlanes
     identity8D_simplex,          // identityMatrix (will be initialized)
-    400.0f,                       // scale
+    300.0f,                       // scale
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
     "8D Simplex",              // name
     "shaders/8d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
+    "shaders/ws-coloring.f"         // shaderFragPath
+};
+
+// 4D Cross-Polytope Construction
+static float identity4D_cross[16];
+
+NDimObjectData crossPolytope4D = {
+    crossPolytopeVerts_4D,       // vertices
+    crossPolytopeVerts_4D_size,  // vertexDataSize
+    48,                          // vertexCount (4D cross-polytope has 8 vertices, 24 edges, 48 vertices for GL_LINES)
+    4,                           // dimensions
+    hypercube4D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity4D_cross,            // identityMatrix (will be initialized)
+    3.5f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "4D Cross-Polytope",         // name
+    "shaders/4d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
+};
+
+// 5D Cross-Polytope Construction
+static float identity5D_cross[25];
+
+NDimObjectData crossPolytope5D = {
+    crossPolytopeVerts_5D,       // vertices
+    crossPolytopeVerts_5D_size,  // vertexDataSize
+    80,                          // vertexCount (5D cross-polytope has 10 vertices, 40 edges, 80 vertices for GL_LINES)
+    5,                           // dimensions
+    hypercube5D_rotations,       // defaultRotationPlanes
+    2,                           // numRotationPlanes
+    identity5D_cross,            // identityMatrix (will be initialized)
+    8.0f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "5D Cross-Polytope",         // name
+    "shaders/5d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
+};
+
+// 6D Cross-Polytope Construction
+static float identity6D_cross[36];
+
+NDimObjectData crossPolytope6D = {
+    crossPolytopeVerts_6D,       // vertices
+    crossPolytopeVerts_6D_size,  // vertexDataSize
+    132,                         // vertexCount (6D cross-polytope has 12 vertices, 66 edges, 132 vertices for GL_LINES)
+    6,                           // dimensions
+    hypercube6D_rotations,       // defaultRotationPlanes
+    3,                           // numRotationPlanes
+    identity6D_cross,            // identityMatrix (will be initialized)
+    30.0f,                       // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "6D Cross-Polytope",         // name
+    "shaders/6d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
+};
+
+// 7D Cross-Polytope Construction
+static float identity7D_cross[49];
+
+NDimObjectData crossPolytope7D = {
+    crossPolytopeVerts_7D,       // vertices
+    crossPolytopeVerts_7D_size,  // vertexDataSize
+    196,                         // vertexCount (7D cross-polytope has 14 vertices, 98 edges, 196 vertices for GL_LINES)
+    7,                           // dimensions
+    hypercube7D_rotations,       // defaultRotationPlanes
+    3,                           // numRotationPlanes
+    identity7D_cross,            // identityMatrix (will be initialized)
+    35.0f,                       // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "7D Cross-Polytope",         // name
+    "shaders/7d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
+};
+
+// 8D Cross-Polytope Construction
+static float identity8D_cross[64];
+
+NDimObjectData crossPolytope8D = {
+    crossPolytopeVerts_8D,       // vertices
+    crossPolytopeVerts_8D_size,  // vertexDataSize
+    272,                         // vertexCount (8D cross-polytope has 16 vertices, 136 edges, 272 vertices for GL_LINES)
+    8,                           // dimensions
+    hypercube8D_rotations,       // defaultRotationPlanes
+    4,                           // numRotationPlanes
+    identity8D_cross,            // identityMatrix (will be initialized)
+    300.0f,                      // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "8D Cross-Polytope",         // name
+    "shaders/8d.v",              // shaderVertPath
+    "shaders/ws-coloring.f"      // shaderFragPath
 };

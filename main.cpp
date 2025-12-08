@@ -1,3 +1,7 @@
+#include <iostream>
+#include <map>
+#include <utility>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -9,10 +13,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
-#include <iostream>
-#include <map>
-#include <utility>
 
 #include "camera.h"
 #include "mesh.h"
@@ -27,7 +27,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setImGuiElements();
-
+void initializeObjects();
 
 // settings
 unsigned int SCR_WIDTH = 1280;
@@ -59,10 +59,10 @@ int frameCount = 0;
 double lastFPSTime = 0.0;
 double currentFPS = 0.0;
 
+// object
 NDimObjectData* currentObject;
 int shapesIndex = 0;
-int currentDimensionIndex = 1;  // Dropdown index (0-6 maps to dimensions 2-8)
-
+int currentDimensionIndex = 2;  // Dropdown index (0-6 maps to dimensions 2-8)
 // Map to store objects by (shapeType, dimension) key
 std::map<std::pair<int, int>, NDimObjectData*> objectMap;
 
@@ -113,42 +113,10 @@ int main()
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 
-    // Initialize all hypercube objects
-    hypercube2D.init();
-    hypercube3D.init();
-    hypercube4D.init();
-    hypercube5D.init();
-    hypercube6D.init();
-    hypercube7D.init();
-    hypercube8D.init();
-
-    simplex2D.init();
-    simplex3D.init();
-    simplex4D.init();
-    simplex5D.init();
-    simplex6D.init();
-    simplex7D.init();
-    simplex8D.init();
-
-    // Populate object map with (shapeType, dimension) -> object
-    // Shape types: 0 = Hypercube, 1 = Hypersphere, 2 = Simplex, 3 = Cross-Polytope
-    objectMap[{0, 2}] = &hypercube2D;
-    objectMap[{0, 3}] = &hypercube3D;
-    objectMap[{0, 4}] = &hypercube4D;
-    objectMap[{0, 5}] = &hypercube5D;
-    objectMap[{0, 6}] = &hypercube6D;
-    objectMap[{0, 7}] = &hypercube7D;
-    objectMap[{0, 8}] = &hypercube8D;
-    objectMap[{2, 2}] = &simplex2D;
-    objectMap[{2, 3}] = &simplex3D;
-    objectMap[{2, 4}] = &simplex4D;
-    objectMap[{2, 5}] = &simplex5D;
-    objectMap[{2, 6}] = &simplex6D;
-    objectMap[{2, 7}] = &simplex7D;
-    objectMap[{2, 8}] = &simplex8D;
+    initializeObjects();
 
     // Set initial object to 3D hypercube
-    currentObject = &hypercube3D;
+    currentObject = &hypercube4D;
 
     // render loop
     // -----------
@@ -220,6 +188,13 @@ int main()
     simplex6D.cleanup();
     simplex7D.cleanup();
     simplex8D.cleanup();
+    crossPolytope2D.cleanup();
+    crossPolytope3D.cleanup();
+    crossPolytope4D.cleanup();
+    crossPolytope5D.cleanup();
+    crossPolytope6D.cleanup();
+    crossPolytope7D.cleanup();
+    crossPolytope8D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -235,7 +210,7 @@ void setImGuiElements() {
     ImGui::NewFrame();
     ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, IMGUI_WINDOW_HEIGHT), ImGuiCond_Always);
     ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - IMGUI_WINDOW_WIDTH - 20, 20), ImGuiCond_Always);
-    ImGui::Begin("ShaderDemos", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("Visualizer", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
     ImGui::Text("FPS: %.1f", currentFPS);
     ImGui::Spacing();
@@ -255,7 +230,7 @@ void setImGuiElements() {
     // dim
     ImGui::Text("Dimensions");
     ImGui::Spacing();
-    const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7", "8" };
+    const char* modelShaderNames[] = { "2D", "3D", "4D", "5D", "6D", "7D", "8D" };
     if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
         updateCurrentObject();
@@ -299,6 +274,56 @@ void setImGuiElements() {
 
 }
 
+void initializeObjects() {
+
+    hypercube2D.init();
+    hypercube3D.init();
+    hypercube4D.init();
+    hypercube5D.init();
+    hypercube6D.init();
+    hypercube7D.init();
+    hypercube8D.init();
+
+    simplex2D.init();
+    simplex3D.init();
+    simplex4D.init();
+    simplex5D.init();
+    simplex6D.init();
+    simplex7D.init();
+    simplex8D.init();
+
+    crossPolytope2D.init();
+    crossPolytope3D.init();
+    crossPolytope4D.init();
+    crossPolytope5D.init();
+    crossPolytope6D.init();
+    crossPolytope7D.init();
+    crossPolytope8D.init();
+
+    // Populate object map with (shapeType, dimension) -> object
+    // Shape types: 0 = Hypercube, 1 = Hypersphere, 2 = Simplex, 3 = Cross-Polytope
+    objectMap[{0, 2}] = &hypercube2D;
+    objectMap[{0, 3}] = &hypercube3D;
+    objectMap[{0, 4}] = &hypercube4D;
+    objectMap[{0, 5}] = &hypercube5D;
+    objectMap[{0, 6}] = &hypercube6D;
+    objectMap[{0, 7}] = &hypercube7D;
+    objectMap[{0, 8}] = &hypercube8D;
+    objectMap[{2, 2}] = &simplex2D;
+    objectMap[{2, 3}] = &simplex3D;
+    objectMap[{2, 4}] = &simplex4D;
+    objectMap[{2, 5}] = &simplex5D;
+    objectMap[{2, 6}] = &simplex6D;
+    objectMap[{2, 7}] = &simplex7D;
+    objectMap[{2, 8}] = &simplex8D;
+    objectMap[{3, 2}] = &crossPolytope2D;
+    objectMap[{3, 3}] = &crossPolytope3D;
+    objectMap[{3, 4}] = &crossPolytope4D;
+    objectMap[{3, 5}] = &crossPolytope5D;
+    objectMap[{3, 6}] = &crossPolytope6D;
+    objectMap[{3, 7}] = &crossPolytope7D;
+    objectMap[{3, 8}] = &crossPolytope8D;
+}
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {

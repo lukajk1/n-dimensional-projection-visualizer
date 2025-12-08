@@ -21,5 +21,13 @@ extern NDimObjectData simplex6D;
 extern NDimObjectData simplex7D;
 extern NDimObjectData simplex8D;
 
+extern NDimObjectData crossPolytope2D;
+extern NDimObjectData crossPolytope3D;
+extern NDimObjectData crossPolytope4D;
+extern NDimObjectData crossPolytope5D;
+extern NDimObjectData crossPolytope6D;
+extern NDimObjectData crossPolytope7D;
+extern NDimObjectData crossPolytope8D;
+
 
 #endif
