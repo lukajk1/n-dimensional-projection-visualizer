@@ -44,14 +44,19 @@ def generate_simplex_cpp_array(n):
         # Format Vertex 2
         v2_str = ", ".join([f"{x:.4f}f" for x in v2])
 
-        print(f"    // Edge {i+1}")
+        #print(f"    // Edge {i+1}")
         print(f"    {v1_str},")
         print(f"    {v2_str},")
-        print("") # Empty line for readability between pairs
+        #print("") # Empty line for readability between pairs
 
     print("};")
 
 # --- USAGE ---
 # Change this number to generate for different dimensions
 # 3 = Tetrahedron, 4 = Pentachoron, etc.
-generate_simplex_cpp_array(3)
+generate_simplex_cpp_array(4)
+generate_simplex_cpp_array(5)
+generate_simplex_cpp_array(6)
+generate_simplex_cpp_array(7)
+generate_simplex_cpp_array(8)
+

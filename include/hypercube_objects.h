@@ -13,4 +13,7 @@ extern NDimObjectData hypercube6D;
 extern NDimObjectData hypercube7D;
 extern NDimObjectData hypercube8D;
 
+extern NDimObjectData simplex3D;
+
+
 #endif

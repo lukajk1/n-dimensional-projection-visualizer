@@ -11,6 +11,8 @@
 #include <imgui_impl_opengl3.h>
 
 #include <iostream>
+#include <map>
+#include <utility>
 
 #include "camera.h"
 #include "mesh.h"
@@ -59,7 +61,22 @@ double currentFPS = 0.0;
 
 NDimObjectData* currentObject;
 int shapesIndex = 0;
-int currentDimensionIndex = 1;
+int currentDimensionIndex = 1;  // Dropdown index (0-6 maps to dimensions 2-8)
+
+// Map to store objects by (shapeType, dimension) key
+std::map<std::pair<int, int>, NDimObjectData*> objectMap;
+
+// Helper function to update current object based on shape and dimension selection
+void updateCurrentObject() {
+    int actualDimension = currentDimensionIndex + 2;  // Convert dropdown index to actual dimension (0->2, 1->3, etc.)
+    auto key = std::make_pair(shapesIndex, actualDimension);
+    auto it = objectMap.find(key);
+    if (it != objectMap.end()) {
+        currentObject = it->second;
+    } else {
+        std::cout << "No object found for shape " << shapesIndex << ", dimension " << actualDimension << std::endl;
+    }
+}
 
 int main()
 {
@@ -105,7 +122,20 @@ int main()
     hypercube7D.init();
     hypercube8D.init();
 
-    // Set initial object to 3D
+    simplex3D.init();
+
+    // Populate object map with (shapeType, dimension) -> object
+    // Shape types: 0 = Hypercube, 1 = Hypersphere, 2 = Simplex, 3 = Cross-Polytope
+    objectMap[{0, 2}] = &hypercube2D;
+    objectMap[{0, 3}] = &hypercube3D;
+    objectMap[{0, 4}] = &hypercube4D;
+    objectMap[{0, 5}] = &hypercube5D;
+    objectMap[{0, 6}] = &hypercube6D;
+    objectMap[{0, 7}] = &hypercube7D;
+    objectMap[{0, 8}] = &hypercube8D;
+    objectMap[{2, 3}] = &simplex3D;
+
+    // Set initial object to 3D hypercube
     currentObject = &hypercube3D;
 
     // render loop
@@ -171,6 +201,7 @@ int main()
     hypercube6D.cleanup();
     hypercube7D.cleanup();
     hypercube8D.cleanup();
+    simplex3D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -197,7 +228,7 @@ void setImGuiElements() {
     const char* shapesList[] = { "Hypercube", "Hypersphere", "Simplex", "Cross-Polytope" };
     if (ImGui::Combo("##Object", &shapesIndex, shapesList, IM_ARRAYSIZE(shapesList)))
     {
-        std::cout << "option was selected" << std::endl;
+        updateCurrentObject();
     }
     ImGui::Spacing();
     ImGui::Spacing();
@@ -205,32 +236,10 @@ void setImGuiElements() {
     // dim
     ImGui::Text("Dimensions");
     ImGui::Spacing();
-    const char* modelShaderNames[] = { "2 (square)", "3 (cube)", "4 (tesseract)", "5", "6", "7", "8" };
+    const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7", "8" };
     if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
-        // Switch between objects based on selection
-        if (currentDimensionIndex == 0) {  // 2D
-            currentObject = &hypercube2D;
-        }
-        else if (currentDimensionIndex == 1) {  // 3D
-            currentObject = &hypercube3D;
-        }
-        else if (currentDimensionIndex == 2) {  // 4D
-            currentObject = &hypercube4D;
-        }
-        else if (currentDimensionIndex == 3) {  // 5D
-            currentObject = &hypercube5D;
-        }
-        else if (currentDimensionIndex == 4) {  // 6D
-            currentObject = &hypercube6D;
-        }
-        else if (currentDimensionIndex == 5) {  // 7D
-            currentObject = &hypercube7D;
-        }
-        else if (currentDimensionIndex == 6) {  // 8D
-            currentObject = &hypercube8D;
-        }
-        // Can add more dimensions here as they're implemented
+        updateCurrentObject();
     }
     ImGui::Spacing();
     ImGui::Spacing();
