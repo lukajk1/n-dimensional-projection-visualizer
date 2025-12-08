@@ -43,6 +43,9 @@ struct NDimObjectData {
     // Transform
     float scale;                   // Uniform scale factor applied to all dimensions
 
+    // Rendering mode
+    bool renderEdges;              // If true, render edges (GL_LINES); if false, render only vertices
+
     // OpenGL resources
     unsigned int VAO;
     unsigned int VBO;
@@ -145,8 +148,10 @@ struct NDimObjectData {
     void draw() const {
         glBindVertexArray(VAO);
 
-        glLineWidth(EDGE_THICKNESS);
-        glDrawArrays(GL_LINES, 0, vertexCount);
+        if (renderEdges) {
+            glLineWidth(EDGE_THICKNESS);
+            glDrawArrays(GL_LINES, 0, vertexCount);
+        }
 
         glPointSize(VERTEX_SIZE);
         glDrawArrays(GL_POINTS, 0, vertexCount);

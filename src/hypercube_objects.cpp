@@ -17,6 +17,7 @@ NDimObjectData hypercube2D = {
     1,                           // numRotationPlanes
     identity2D,                  // identityMatrix (will be initialized)
     1.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -37,6 +38,7 @@ NDimObjectData simplex2D = {
     1,                           // numRotationPlanes
     identity2D_simplex,          // identityMatrix (will be initialized)
     1.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -57,6 +59,7 @@ NDimObjectData crossPolytope2D = {
     1,                           // numRotationPlanes
     identity2D_cross,            // identityMatrix (will be initialized)
     1.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -81,6 +84,7 @@ NDimObjectData crossPolytope3D = {
     1,                           // numRotationPlanes
     identity3D_cross,            // identityMatrix (will be initialized)
     1.2f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -101,6 +105,7 @@ NDimObjectData hypercube3D = {
     1,                           // numRotationPlanes
     identity3D,                  // identityMatrix (will be initialized)
     0.65f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -127,6 +132,7 @@ NDimObjectData hypercube4D = {
     1,                           // numRotationPlanes
     identity4D,                  // identityMatrix (will be initialized)
     1.5f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -152,6 +158,7 @@ NDimObjectData hypercube5D = {
     2,                           // numRotationPlanes
     identity5D,                  // identityMatrix (will be initialized)
     4.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -178,6 +185,7 @@ NDimObjectData hypercube6D = {
     3,                           // numRotationPlanes
     identity6D,                  // identityMatrix (will be initialized)
     10.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -204,6 +212,7 @@ NDimObjectData hypercube7D = {
     3,                           // numRotationPlanes
     identity7D,                  // identityMatrix (will be initialized)
     25.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -231,6 +240,7 @@ NDimObjectData hypercube8D = {
     4,                           // numRotationPlanes
     identity8D,                  // identityMatrix (will be initialized)
     55.0f,                       // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -248,6 +258,7 @@ NDimObjectData simplex3D = {
     1,                           // numRotationPlanes
     identity3D,                  // identityMatrix (will be initialized)
     1.2f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -268,6 +279,7 @@ NDimObjectData simplex4D = {
     1,                           // numRotationPlanes
     identity4D_simplex,          // identityMatrix (will be initialized)
     3.5f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -288,6 +300,7 @@ NDimObjectData simplex5D = {
     2,                           // numRotationPlanes
     identity5D_simplex,          // identityMatrix (will be initialized)
     8.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -308,6 +321,7 @@ NDimObjectData simplex6D = {
     3,                           // numRotationPlanes
     identity6D_simplex,          // identityMatrix (will be initialized)
     30.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -328,6 +342,7 @@ NDimObjectData simplex7D = {
     3,                           // numRotationPlanes
     identity7D_simplex,          // identityMatrix (will be initialized)
     35.0f,                       // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -348,6 +363,7 @@ NDimObjectData simplex8D = {
     4,                           // numRotationPlanes
     identity8D_simplex,          // identityMatrix (will be initialized)
     300.0f,                       // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -368,6 +384,7 @@ NDimObjectData crossPolytope4D = {
     1,                           // numRotationPlanes
     identity4D_cross,            // identityMatrix (will be initialized)
     3.5f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -388,6 +405,7 @@ NDimObjectData crossPolytope5D = {
     2,                           // numRotationPlanes
     identity5D_cross,            // identityMatrix (will be initialized)
     8.0f,                        // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -408,6 +426,7 @@ NDimObjectData crossPolytope6D = {
     3,                           // numRotationPlanes
     identity6D_cross,            // identityMatrix (will be initialized)
     30.0f,                       // scale
+        true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -428,6 +447,7 @@ NDimObjectData crossPolytope7D = {
     3,                           // numRotationPlanes
     identity7D_cross,            // identityMatrix (will be initialized)
     35.0f,                       // scale
+    true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -448,6 +468,7 @@ NDimObjectData crossPolytope8D = {
     4,                           // numRotationPlanes
     identity8D_cross,            // identityMatrix (will be initialized)
     300.0f,                      // scale
+        true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
