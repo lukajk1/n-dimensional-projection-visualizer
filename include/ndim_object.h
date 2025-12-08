@@ -8,6 +8,9 @@
 #include <glad/glad.h>
 #include "shader_s.h"
 
+extern float EDGE_THICKNESS;
+extern float VERTEX_SIZE;
+
 struct RotationPlane {
     int axis1;        // First axis (0=X, 1=Y, 2=Z, 3=W, 4=V, etc.)
     int axis2;        // Second axis
@@ -63,6 +66,13 @@ struct NDimObjectData {
         if (identityMatrix != nullptr) {
             generateIdentityMatrix(identityMatrix, dimensions);
         }
+    }
+
+    // Initialize everything (identity matrix, buffers, and shader)
+    void init() {
+        initIdentityMatrix();
+        setupBuffers();
+        initShader();
     }
 
     // Build rotation matrix by applying all default rotation planes
@@ -135,10 +145,10 @@ struct NDimObjectData {
     void draw() const {
         glBindVertexArray(VAO);
 
-        glLineWidth(4.5f);
+        glLineWidth(EDGE_THICKNESS);
         glDrawArrays(GL_LINES, 0, vertexCount);
 
-        glPointSize(12.0f);
+        glPointSize(VERTEX_SIZE);
         glDrawArrays(GL_POINTS, 0, vertexCount);
     }
 

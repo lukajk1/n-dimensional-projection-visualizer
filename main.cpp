@@ -32,7 +32,7 @@ unsigned int SCR_WIDTH = 1280;
 unsigned int SCR_HEIGHT = 720;
 
 const unsigned int IMGUI_WINDOW_WIDTH = 180;
-const unsigned int IMGUI_WINDOW_HEIGHT = 300;
+const unsigned int IMGUI_WINDOW_HEIGHT = 400;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.0f, -5.0f));
@@ -45,6 +45,8 @@ float camPos = 0.0f; // camera position around origin (0-1)
 
 // global
 float rotationRate = 0.7f;
+float EDGE_THICKNESS = 8.0f;
+float VERTEX_SIZE = 14.0f;
 
 // timing
 float timeRatio = 1.0f;
@@ -95,33 +97,13 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     // Initialize all hypercube objects
-    hypercube2D.initIdentityMatrix();
-    hypercube2D.setupBuffers();
-    hypercube2D.initShader();
-
-    hypercube3D.initIdentityMatrix();
-    hypercube3D.setupBuffers();
-    hypercube3D.initShader();
-
-    hypercube4D.initIdentityMatrix();
-    hypercube4D.setupBuffers();
-    hypercube4D.initShader();
-
-    hypercube5D.initIdentityMatrix();
-    hypercube5D.setupBuffers();
-    hypercube5D.initShader();
-
-    hypercube6D.initIdentityMatrix();
-    hypercube6D.setupBuffers();
-    hypercube6D.initShader();
-
-    hypercube7D.initIdentityMatrix();
-    hypercube7D.setupBuffers();
-    hypercube7D.initShader();
-
-    hypercube8D.initIdentityMatrix();
-    hypercube8D.setupBuffers();
-    hypercube8D.initShader();
+    hypercube2D.init();
+    hypercube3D.init();
+    hypercube4D.init();
+    hypercube5D.init();
+    hypercube6D.init();
+    hypercube7D.init();
+    hypercube8D.init();
 
     // Set initial object to 3D
     currentObject = &hypercube3D;
@@ -267,6 +249,20 @@ void setImGuiElements() {
     if (ImGui::SliderFloat("##Zoom", &inverseZoom, 1.0f, 9.0f, "%.1f")) {
         camera.Zoom = 91.0f - inverseZoom * 10.0f;  // Convert back to actual zoom
     }
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    // Edge Thickness
+    ImGui::Text("Edge Thickness");
+    ImGui::Spacing();
+    ImGui::SliderFloat("##EdgeThickness", &EDGE_THICKNESS, 0.1f, 30.0f, "%.1f px");
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    // Vertex Size
+    ImGui::Text("Vertex Size");
+    ImGui::Spacing();
+    ImGui::SliderFloat("##VertexSize", &VERTEX_SIZE, 0.1f, 30.0f, "%.1f px");
     ImGui::Spacing();
     ImGui::Spacing();
 
