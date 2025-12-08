@@ -139,8 +139,8 @@ int main()
         }
 
         float angle = currentFrame * rotationRate;
-        /*camera.Position.x = camRotRadius * cos(angle);
-        camera.Position.z = camRotRadius * sin(angle);*/
+        camera.Position.x = camRotRadius * cos(angle);
+        camera.Position.z = camRotRadius * sin(angle);
         camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
         // imgui pass 
@@ -245,11 +245,12 @@ void setImGuiElements() {
     // Camera Zoom
     ImGui::Text("Camera Zoom");
     ImGui::Spacing();
-    ImGui::SliderFloat("##Zoom", &camera.Zoom, 1.0f, 90.0f);
+    float inverseZoom = (91.0f - camera.Zoom) / 10.0f;  // Invert the range and scale to 1-9
+    if (ImGui::SliderFloat("##Zoom", &inverseZoom, 1.0f, 9.0f)) {
+        camera.Zoom = 91.0f - inverseZoom * 10.0f;  // Convert back to actual zoom
+    }
     ImGui::Spacing();
     ImGui::Spacing();
-
-
 
 }
 
