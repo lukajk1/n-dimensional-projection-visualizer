@@ -16,13 +16,13 @@ out vec3 fragPos;
 void main() {
     // Extract position components and apply scale
     float position[7];
-    position[0] = pos_group1.x * scale;
-    position[1] = pos_group1.y * scale;
-    position[2] = pos_group1.z * scale;
-    position[3] = pos_group1.w * scale;
-    position[4] = pos_group2.x * scale;
-    position[5] = pos_group2.y * scale;
-    position[6] = pos_group2.z * scale;
+    position[0] = pos_group1.x;
+    position[1] = pos_group1.y;
+    position[2] = pos_group1.z;
+    position[3] = pos_group1.w;
+    position[4] = pos_group2.x;
+    position[5] = pos_group2.y;
+    position[6] = pos_group2.z;
 
 	// manual mult
     float rotated7D[7];
@@ -71,7 +71,8 @@ void main() {
     }
 
     // Perform 4D -> 3D Projection
-    vec3 projected3D_World = projected4D.xyz / (distance4D + w);
+	// apply scale in 3d worldspace to avoid distortion
+    vec3 projected3D_World = projected4D.xyz / (distance4D + w) * scale;
 	// color output will use worldspace coords
 	fragPos = projected3D_World;
     // Apply the 3D View (Camera) Transformation

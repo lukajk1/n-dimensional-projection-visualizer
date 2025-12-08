@@ -23,6 +23,7 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setImGuiElements();
 
 
@@ -46,6 +47,7 @@ float camPos = 0.0f; // camera position around origin (0-1)
 float rotationRate = 0.7f;
 
 // timing
+float timeRatio = 1.0f;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 // fps calculation
@@ -74,6 +76,7 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetScrollCallback(window, scroll_callback);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -138,7 +141,7 @@ int main()
             lastFPSTime = currentTime;
         }
 
-        float angle = currentFrame * rotationRate;
+        float angle = currentFrame * rotationRate * timeRatio;
         camera.Position.x = camRotRadius * cos(angle);
         camera.Position.z = camRotRadius * sin(angle);
         camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -156,7 +159,7 @@ int main()
         // Build rotation matrix using object's method
         // Use a static buffer large enough for any dimension we support (up to 7D = 49 floats)
         static float rotationMatrix[49];
-        currentObject->buildRotationMatrix(rotationMatrix, currentFrame);
+        currentObject->buildRotationMatrix(rotationMatrix, currentFrame * timeRatio);
 
         currentObject->shader->setFloatArray("rotationMat", rotationMatrix, currentObject->matrixSize());
         currentObject->shader->setFloat("scale", currentObject->scale);
@@ -242,11 +245,18 @@ void setImGuiElements() {
     ImGui::Spacing();
     ImGui::Spacing();
 
+    // Time Speed
+    ImGui::Text("Time Speed");
+    ImGui::Spacing();
+    ImGui::SliderFloat("##TimeRatio", &timeRatio, 0.0f, 2.0f, "%.1f");
+    ImGui::Spacing();
+    ImGui::Spacing();
+
     // Camera Zoom
     ImGui::Text("Camera Zoom");
     ImGui::Spacing();
     float inverseZoom = (91.0f - camera.Zoom) / 10.0f;  // Invert the range and scale to 1-9
-    if (ImGui::SliderFloat("##Zoom", &inverseZoom, 1.0f, 9.0f)) {
+    if (ImGui::SliderFloat("##Zoom", &inverseZoom, 1.0f, 9.0f, "%.1f")) {
         camera.Zoom = 91.0f - inverseZoom * 10.0f;  // Convert back to actual zoom
     }
     ImGui::Spacing();
@@ -255,9 +265,22 @@ void setImGuiElements() {
 }
 
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    // Adjust camera zoom based on scroll direction
+    // yoffset > 0 means scroll up (zoom in), yoffset < 0 means scroll down (zoom out)
+    camera.Zoom -= (float)yoffset * 3.0f;
+
+    // Clamp zoom to valid range (1-90, which maps to slider display of 9-1)
+    if (camera.Zoom < 1.0f)
+        camera.Zoom = 1.0f;
+    if (camera.Zoom > 90.0f)
+        camera.Zoom = 90.0f;
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }

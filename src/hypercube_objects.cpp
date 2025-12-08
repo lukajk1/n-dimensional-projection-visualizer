@@ -64,7 +64,7 @@ NDimObjectData hypercube4D = {
     hypercube4D_rotations,       // defaultRotationPlanes
     1,                           // numRotationPlanes
     identity4D,                  // identityMatrix (will be initialized)
-    1.0f,                        // scale
+    1.5f,                        // scale
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -89,7 +89,7 @@ NDimObjectData hypercube5D = {
     hypercube5D_rotations,       // defaultRotationPlanes
     2,                           // numRotationPlanes
     identity5D,                  // identityMatrix (will be initialized)
-    1.3f,                        // scale
+    4.0f,                        // scale
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -115,7 +115,7 @@ NDimObjectData hypercube6D = {
     hypercube6D_rotations,       // defaultRotationPlanes
     3,                           // numRotationPlanes
     identity6D,                  // identityMatrix (will be initialized)
-    1.0f,                        // scale
+    10.0f,                        // scale
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
@@ -141,7 +141,7 @@ NDimObjectData hypercube7D = {
     hypercube7D_rotations,       // defaultRotationPlanes
     3,                           // numRotationPlanes
     identity7D,                  // identityMatrix (will be initialized)
-    1.0f,                        // scale
+    25.0f,                        // scale
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)

@@ -16,9 +16,9 @@ out vec3 fragPos;
 void main() {
     // Extract position components and apply scale
     float position[3];
-    position[0] = pos_group1.x * scale;
-    position[1] = pos_group1.y * scale;
-    position[2] = pos_group1.z * scale;
+    position[0] = pos_group1.x;
+    position[1] = pos_group1.y;
+    position[2] = pos_group1.z;
 
     // Apply 3D rotation - Manual matrix-vector multiplication
     float rotated3D[3];
@@ -30,7 +30,7 @@ void main() {
     }
 
     // Already in 3D world space - no projection needed
-    vec3 worldPos = vec3(rotated3D[0], rotated3D[1], rotated3D[2]);
+    vec3 worldPos = vec3(rotated3D[0], rotated3D[1], rotated3D[2]) * scale;
     fragPos = worldPos;
 
     // Apply the 3D View (Camera) Transformation
