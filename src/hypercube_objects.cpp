@@ -25,6 +25,26 @@ NDimObjectData hypercube2D = {
     "shaders/fragment.f"         // shaderFragPath
 };
 
+// 2D Simplex Construction
+static float identity2D_simplex[4];
+
+NDimObjectData simplex2D = {
+    simplexVerts_2D,           // vertices
+    simplexVerts_2D_size,      // vertexDataSize
+    6,                           // vertexCount (2D simplex/triangle has 3 vertices, 3 edges, 6 vertices for GL_LINES)
+    2,                           // dimensions
+    hypercube2D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity2D_simplex,          // identityMatrix (will be initialized)
+    1.0f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "2D Simplex",              // name
+    "shaders/2d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
 // 3D Hypercube Construction
 RotationPlane hypercube3D_rotations[] = {
     {0, 1, 0.4f}  // XY plane rotation at 0.4 rad/s
@@ -50,22 +70,6 @@ NDimObjectData hypercube3D = {
 };
 
 
-NDimObjectData simplex3D = {
-    simplexVerts_3D,           // vertices
-    simplexVerts_3D_size,      // vertexDataSize
-    12,                          // vertexCount (3D cube has 8 vertices, 12 edges, 24 vertices for GL_LINES)
-    3,                           // dimensions
-    hypercube3D_rotations,       // defaultRotationPlanes
-    1,                           // numRotationPlanes
-    identity3D,                  // identityMatrix (will be initialized)
-    0.65f,                        // scale
-    0,                           // VAO (will be set by setupBuffers)
-    0,                           // VBO (will be set by setupBuffers)
-    nullptr,                     // shader (will be initialized by initShader)
-    "3D Simplex",              // name
-    "shaders/3d.v",              // shaderVertPath
-    "shaders/fragment.f"         // shaderFragPath
-};
 
 // 4D Hypercube Construction
 RotationPlane hypercube4D_rotations[] = {
@@ -191,6 +195,123 @@ NDimObjectData hypercube8D = {
     0,                           // VBO (will be set by setupBuffers)
     nullptr,                     // shader (will be initialized by initShader)
     "8D Hypercube",              // name
+    "shaders/8d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
+NDimObjectData simplex3D = {
+    simplexVerts_3D,           // vertices
+    simplexVerts_3D_size,      // vertexDataSize
+    12,                          // vertexCount (3D simplex has 4 vertices, 6 edges, 12 vertices for GL_LINES)
+    3,                           // dimensions
+    hypercube3D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity3D,                  // identityMatrix (will be initialized)
+    1.2f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "3D Simplex",              // name
+    "shaders/3d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
+// 4D Simplex Construction
+static float identity4D_simplex[16];
+
+NDimObjectData simplex4D = {
+    simplexVerts_4D,           // vertices
+    simplexVerts_4D_size,      // vertexDataSize
+    20,                          // vertexCount (4D simplex has 5 vertices, 10 edges, 20 vertices for GL_LINES)
+    4,                           // dimensions
+    hypercube4D_rotations,       // defaultRotationPlanes
+    1,                           // numRotationPlanes
+    identity4D_simplex,          // identityMatrix (will be initialized)
+    3.5f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "4D Simplex",              // name
+    "shaders/4d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
+// 5D Simplex Construction
+static float identity5D_simplex[25];
+
+NDimObjectData simplex5D = {
+    simplexVerts_5D,           // vertices
+    simplexVerts_5D_size,      // vertexDataSize
+    30,                          // vertexCount (5D simplex has 6 vertices, 15 edges, 30 vertices for GL_LINES)
+    5,                           // dimensions
+    hypercube5D_rotations,       // defaultRotationPlanes
+    2,                           // numRotationPlanes
+    identity5D_simplex,          // identityMatrix (will be initialized)
+    8.0f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "5D Simplex",              // name
+    "shaders/5d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
+// 6D Simplex Construction
+static float identity6D_simplex[36];
+
+NDimObjectData simplex6D = {
+    simplexVerts_6D,           // vertices
+    simplexVerts_6D_size,      // vertexDataSize
+    42,                          // vertexCount (6D simplex has 7 vertices, 21 edges, 42 vertices for GL_LINES)
+    6,                           // dimensions
+    hypercube6D_rotations,       // defaultRotationPlanes
+    3,                           // numRotationPlanes
+    identity6D_simplex,          // identityMatrix (will be initialized)
+    30.0f,                        // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "6D Simplex",              // name
+    "shaders/6d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
+// 7D Simplex Construction
+static float identity7D_simplex[49];
+
+NDimObjectData simplex7D = {
+    simplexVerts_7D,           // vertices
+    simplexVerts_7D_size,      // vertexDataSize
+    56,                          // vertexCount (7D simplex has 8 vertices, 28 edges, 56 vertices for GL_LINES)
+    7,                           // dimensions
+    hypercube7D_rotations,       // defaultRotationPlanes
+    3,                           // numRotationPlanes
+    identity7D_simplex,          // identityMatrix (will be initialized)
+    35.0f,                       // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "7D Simplex",              // name
+    "shaders/7d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
+
+// 8D Simplex Construction
+static float identity8D_simplex[64];
+
+NDimObjectData simplex8D = {
+    simplexVerts_8D,           // vertices
+    simplexVerts_8D_size,      // vertexDataSize
+    72,                          // vertexCount (8D simplex has 9 vertices, 36 edges, 72 vertices for GL_LINES)
+    8,                           // dimensions
+    hypercube8D_rotations,       // defaultRotationPlanes
+    4,                           // numRotationPlanes
+    identity8D_simplex,          // identityMatrix (will be initialized)
+    400.0f,                       // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "8D Simplex",              // name
     "shaders/8d.v",              // shaderVertPath
     "shaders/fragment.f"         // shaderFragPath
 };

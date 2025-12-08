@@ -34,7 +34,7 @@ unsigned int SCR_WIDTH = 1280;
 unsigned int SCR_HEIGHT = 720;
 
 const unsigned int IMGUI_WINDOW_WIDTH = 180;
-const unsigned int IMGUI_WINDOW_HEIGHT = 400;
+const unsigned int IMGUI_WINDOW_HEIGHT = 500;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.0f, -5.0f));
@@ -122,7 +122,13 @@ int main()
     hypercube7D.init();
     hypercube8D.init();
 
+    simplex2D.init();
     simplex3D.init();
+    simplex4D.init();
+    simplex5D.init();
+    simplex6D.init();
+    simplex7D.init();
+    simplex8D.init();
 
     // Populate object map with (shapeType, dimension) -> object
     // Shape types: 0 = Hypercube, 1 = Hypersphere, 2 = Simplex, 3 = Cross-Polytope
@@ -133,7 +139,13 @@ int main()
     objectMap[{0, 6}] = &hypercube6D;
     objectMap[{0, 7}] = &hypercube7D;
     objectMap[{0, 8}] = &hypercube8D;
+    objectMap[{2, 2}] = &simplex2D;
     objectMap[{2, 3}] = &simplex3D;
+    objectMap[{2, 4}] = &simplex4D;
+    objectMap[{2, 5}] = &simplex5D;
+    objectMap[{2, 6}] = &simplex6D;
+    objectMap[{2, 7}] = &simplex7D;
+    objectMap[{2, 8}] = &simplex8D;
 
     // Set initial object to 3D hypercube
     currentObject = &hypercube3D;
@@ -201,7 +213,13 @@ int main()
     hypercube6D.cleanup();
     hypercube7D.cleanup();
     hypercube8D.cleanup();
+    simplex2D.cleanup();
     simplex3D.cleanup();
+    simplex4D.cleanup();
+    simplex5D.cleanup();
+    simplex6D.cleanup();
+    simplex7D.cleanup();
+    simplex8D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -222,6 +240,7 @@ void setImGuiElements() {
     ImGui::Text("FPS: %.1f", currentFPS);
     ImGui::Spacing();
 
+    ImGui::SeparatorText("Object");
     // family
     ImGui::Text("Family");
     ImGui::Spacing();
@@ -244,6 +263,7 @@ void setImGuiElements() {
     ImGui::Spacing();
     ImGui::Spacing();
 
+    ImGui::SeparatorText("Scene");
     // Time Speed
     ImGui::Text("Time Speed");
     ImGui::Spacing();
@@ -260,6 +280,8 @@ void setImGuiElements() {
     }
     ImGui::Spacing();
     ImGui::Spacing();
+
+    ImGui::SeparatorText("Display");
 
     // Edge Thickness
     ImGui::Text("Edge Thickness");

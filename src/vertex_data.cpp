@@ -5185,6 +5185,7 @@ float simplexVerts_2D[] = {
     0.5774f, -1.0000f,
     0.5774f, 1.0000f,
 };
+const size_t simplexVerts_2D_size = sizeof(simplexVerts_2D);
 
 // Regular 3-Simplex (Wireframe Pairs)
 // Dimension: 3
@@ -5232,6 +5233,8 @@ float simplexVerts_4D[] = {
     1.1321f, -0.4640f, 0.3162f, -0.0554f,
     -0.1399f, 0.6108f, 0.3162f, 1.0523f,
 };
+const size_t simplexVerts_4D_size = sizeof(simplexVerts_4D);
+
 // Regular 5-Simplex (Wireframe Pairs)
 // Dimension: 5
 // Total Vertices: 6
@@ -5268,6 +5271,8 @@ float simplexVerts_5D[] = {
     -0.6429f, -0.8766f, 0.2582f, -0.6376f, 0.1085f,
     -0.2404f, -0.1713f, 0.2582f, 1.1699f, 0.3796f,
 };
+const size_t simplexVerts_5D_size = sizeof(simplexVerts_5D);
+
 // Regular 6-Simplex (Wireframe Pairs)
 // Dimension: 6
 // Total Vertices: 7
@@ -5316,6 +5321,8 @@ float simplexVerts_6D[] = {
     0.1842f, 0.2182f, -0.1584f, 0.3060f, -1.1292f, 0.4887f,
     0.6483f, 0.2182f, -0.3577f, 0.6732f, 0.7608f, 0.2940f,
 };
+const size_t simplexVerts_6D_size = sizeof(simplexVerts_6D);
+
 // Regular 7-Simplex (Wireframe Pairs)
 // Dimension: 7
 // Total Vertices: 8
@@ -5378,6 +5385,8 @@ float simplexVerts_7D[] = {
     0.4963f, -0.6120f, 0.5754f, 0.1890f, 0.7692f, 0.3124f, 0.2705f,
     -0.1551f, 0.8654f, 0.6411f, 0.1890f, -0.0494f, -0.4938f, 0.5330f,
 };
+const size_t simplexVerts_7D_size = sizeof(simplexVerts_7D);
+
 // Regular 8-Simplex (Wireframe Pairs)
 // Dimension: 8
 // Total Vertices: 9
@@ -5456,3 +5465,4 @@ float simplexVerts_8D[] = {
     -0.1916f, -0.4474f, 0.1640f, 1.1981f, 0.0306f, -0.2232f, 0.0071f, 0.1667f,
     0.9631f, -0.4474f, 0.0530f, -0.2520f, -0.6765f, -0.2232f, -0.2199f, 0.1667f,
 };
+const size_t simplexVerts_8D_size = sizeof(simplexVerts_8D);
