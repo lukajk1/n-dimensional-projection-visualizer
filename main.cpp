@@ -23,7 +23,7 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void drawImGuiElements();
+void setImGuiElements();
 
 
 // settings
@@ -108,6 +108,10 @@ int main()
     hypercube5D.setupBuffers();
     hypercube5D.initShader();
 
+    hypercube6D.initIdentityMatrix();
+    hypercube6D.setupBuffers();
+    hypercube6D.initShader();
+
     hypercube7D.initIdentityMatrix();
     hypercube7D.setupBuffers();
     hypercube7D.initShader();
@@ -140,7 +144,7 @@ int main()
         camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
         // imgui pass 
-        drawImGuiElements();
+        setImGuiElements();
 
         // Activate shader
         currentObject->shader->use();
@@ -162,6 +166,11 @@ int main()
         // draw
         currentObject->draw();
 
+        // draw imgui
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -170,6 +179,7 @@ int main()
     hypercube3D.cleanup();
     hypercube4D.cleanup();
     hypercube5D.cleanup();
+    hypercube6D.cleanup();
     hypercube7D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -180,7 +190,7 @@ int main()
     return 0;
 }
 
-void drawImGuiElements() {
+void setImGuiElements() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -221,6 +231,9 @@ void drawImGuiElements() {
         else if (currentDimensionIndex == 3) {  // 5D
             currentObject = &hypercube5D;
         }
+        else if (currentDimensionIndex == 4) {  // 6D
+            currentObject = &hypercube6D;
+        }
         else if (currentDimensionIndex == 5) {  // 7D
             currentObject = &hypercube7D;
         }
@@ -236,10 +249,6 @@ void drawImGuiElements() {
     ImGui::Spacing();
     ImGui::Spacing();
 
-    // clean up
-    ImGui::End();
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 
 }
