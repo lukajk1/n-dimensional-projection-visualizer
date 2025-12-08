@@ -28,8 +28,8 @@ void setImGuiElements();
 
 
 // settings
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
+unsigned int SCR_WIDTH = 1280;
+unsigned int SCR_HEIGHT = 720;
 
 const unsigned int IMGUI_WINDOW_WIDTH = 180;
 const unsigned int IMGUI_WINDOW_HEIGHT = 300;
@@ -119,6 +119,10 @@ int main()
     hypercube7D.setupBuffers();
     hypercube7D.initShader();
 
+    hypercube8D.initIdentityMatrix();
+    hypercube8D.setupBuffers();
+    hypercube8D.initShader();
+
     // Set initial object to 3D
     currentObject = &hypercube3D;
 
@@ -157,8 +161,8 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         // Build rotation matrix using object's method
-        // Use a static buffer large enough for any dimension we support (up to 7D = 49 floats)
-        static float rotationMatrix[49];
+        // Use a static buffer large enough for any dimension we support (up to 8D = 64 floats)
+        static float rotationMatrix[64];
         currentObject->buildRotationMatrix(rotationMatrix, currentFrame * timeRatio);
 
         currentObject->shader->setFloatArray("rotationMat", rotationMatrix, currentObject->matrixSize());
@@ -184,6 +188,7 @@ int main()
     hypercube5D.cleanup();
     hypercube6D.cleanup();
     hypercube7D.cleanup();
+    hypercube8D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -218,7 +223,7 @@ void setImGuiElements() {
     // dim
     ImGui::Text("Dimensions");
     ImGui::Spacing();
-    const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7" };
+    const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7", "8" };
     if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
         // Switch between objects based on selection
@@ -239,6 +244,9 @@ void setImGuiElements() {
         }
         else if (currentDimensionIndex == 5) {  // 7D
             currentObject = &hypercube7D;
+        }
+        else if (currentDimensionIndex == 6) {  // 8D
+            currentObject = &hypercube8D;
         }
         // Can add more dimensions here as they're implemented
     }
@@ -283,4 +291,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+
+    // Update global screen dimensions
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
 }

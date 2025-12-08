@@ -149,3 +149,30 @@ NDimObjectData hypercube7D = {
     "shaders/7d.v",              // shaderVertPath
     "shaders/fragment.f"         // shaderFragPath
 };
+
+// 8D Hypercube Construction
+RotationPlane hypercube8D_rotations[] = {
+    {1, 3, 0.38f},  // YW plane rotation at 0.38 rad/s
+    {0, 4, 0.28f},  // XV plane rotation at 0.28 rad/s
+    {2, 5, 0.23f},  // ZU plane rotation at 0.23 rad/s
+    {6, 7, 0.18f}   // New 8D plane rotation at 0.18 rad/s
+};
+
+static float identity8D[64];
+
+NDimObjectData hypercube8D = {
+    hypercubeVerts_8D,           // vertices
+    hypercubeVerts_8D_size,      // vertexDataSize
+    2048,                        // vertexCount (8D hypercube has 256 vertices, 1024 edges, 2048 vertices for GL_LINES)
+    8,                           // dimensions
+    hypercube8D_rotations,       // defaultRotationPlanes
+    4,                           // numRotationPlanes
+    identity8D,                  // identityMatrix (will be initialized)
+    55.0f,                       // scale
+    0,                           // VAO (will be set by setupBuffers)
+    0,                           // VBO (will be set by setupBuffers)
+    nullptr,                     // shader (will be initialized by initShader)
+    "8D Hypercube",              // name
+    "shaders/8d.v",              // shaderVertPath
+    "shaders/fragment.f"         // shaderFragPath
+};
