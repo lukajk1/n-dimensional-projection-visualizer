@@ -205,7 +205,7 @@ void setImGuiElements() {
     // dim
     ImGui::Text("Dimensions");
     ImGui::Spacing();
-    const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7", "8" };
+    const char* modelShaderNames[] = { "2 (square)", "3 (cube)", "4 (tesseract)", "5", "6", "7", "8" };
     if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
         // Switch between objects based on selection
