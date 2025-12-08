@@ -37,6 +37,9 @@ struct NDimObjectData {
     int numRotationPlanes;
     float* identityMatrix;         // NxN identity matrix for rotation base (generated automatically)
 
+    // Transform
+    float scale;                   // Uniform scale factor applied to all dimensions
+
     // OpenGL resources
     unsigned int VAO;
     unsigned int VBO;

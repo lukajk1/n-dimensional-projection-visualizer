@@ -19,6 +19,7 @@
 #include "filesystem.h"
 #include "vertex_data.h"
 #include "ndim_object.h"
+#include "hypercube_objects.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -52,6 +53,9 @@ int frameCount = 0;
 double lastFPSTime = 0.0;
 double currentFPS = 0.0;
 
+NDimObjectData* currentObject;
+int shapesIndex = 0;
+int currentDimensionIndex = 1;
 
 int main()
 {
@@ -87,36 +91,17 @@ int main()
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 
-    // Define default rotation for 5D hypercube
-    RotationPlane hypercube5D_rotations[] = {
-        {1, 3, 0.5f},  // YW plane rotation at 0.5 rad/s
-        {0, 4, 0.3f}   // XV plane rotation at 0.3 rad/s
-    };
+    // Initialize both hypercube objects
+    hypercube4D.initIdentityMatrix();
+    hypercube4D.setupBuffers();
+    hypercube4D.initShader();
 
-    // Allocate space for 5x5 identity matrix
-    static float identity5D[25];
-
-    // Create 5D hypercube object data
-    NDimObjectData hypercube5D = {
-        hypercubeVerts_5D,           // vertices
-        hypercubeVerts_5D_size,      // vertexDataSize
-        160,                         // vertexCount (5D hypercube has 32 vertices, 80 edges, 160 vertices for GL_LINES)
-        5,                           // dimensions
-        hypercube5D_rotations,       // defaultRotationPlanes
-        2,                           // numRotationPlanes
-        identity5D,                  // identityMatrix (will be initialized)
-        0,                           // VAO (will be set by setupBuffers)
-        0,                           // VBO (will be set by setupBuffers)
-        nullptr,                     // shader (will be initialized by initShader)
-        "5D Hypercube",              // name
-        "shaders/5d.v",              // shaderVertPath
-        "shaders/fragment.f"         // shaderFragPath
-    };
-
-    // Initialize the object
     hypercube5D.initIdentityMatrix();
     hypercube5D.setupBuffers();
     hypercube5D.initShader();
+
+    // Set initial object to 5D
+    currentObject = &hypercube5D;
 
     // render loop
     // -----------
@@ -138,36 +123,38 @@ int main()
         }
 
         float angle = currentFrame * rotationRate;
-        // 
         camera.Position.x = camRotRadius * cos(angle);
         camera.Position.z = camRotRadius * sin(angle);
         camera.LookAtTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 
+        // imgui pass 
+        drawImGuiElements();
+
         // Activate shader
-        hypercube5D.shader->use();
+        currentObject->shader->use();
 
         // 3D camera matrices
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         // Build rotation matrix using object's method
-        // can't just assign an array to the return of the function since it has to be genericized and I don't want to deal with that
-        float rotation5D[25];
-        hypercube5D.buildRotationMatrix(rotation5D, currentFrame);
+        // Use a static buffer large enough for any dimension we support (up to 7D = 49 floats)
+        static float rotationMatrix[49];
+        currentObject->buildRotationMatrix(rotationMatrix, currentFrame);
 
-        hypercube5D.shader->setFloatArray("rotationMat", rotation5D, 25);
-        hypercube5D.shader->setMat4("view", view);
-        hypercube5D.shader->setMat4("projection", projection);
+        currentObject->shader->setFloatArray("rotationMat", rotationMatrix, currentObject->matrixSize());
+        currentObject->shader->setFloat("scale", currentObject->scale);
+        currentObject->shader->setMat4("view", view);
+        currentObject->shader->setMat4("projection", projection);
 
         // draw
-        hypercube5D.draw();
-
-        drawImGuiElements();
+        currentObject->draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    hypercube4D.cleanup();
     hypercube5D.cleanup();
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -193,7 +180,6 @@ void drawImGuiElements() {
     ImGui::Text("Family");
     ImGui::Spacing();
     const char* shapesList[] = { "Hypercube", "Hypersphere", "Simplex", "Cross-Polytope" };
-    int shapesIndex = 0;
     if (ImGui::Combo("##Object", &shapesIndex, shapesList, IM_ARRAYSIZE(shapesList)))
     {
         std::cout << "option was selected" << std::endl;
@@ -205,10 +191,16 @@ void drawImGuiElements() {
     ImGui::Text("Dimensions");
     ImGui::Spacing();
     const char* modelShaderNames[] = { "2", "3", "4", "5", "6", "7" };
-    int currentModelShaderIndex = 2;
-    if (ImGui::Combo("##Dimensions", &currentModelShaderIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
+    if (ImGui::Combo("##Dimensions", &currentDimensionIndex, modelShaderNames, IM_ARRAYSIZE(modelShaderNames)))
     {
-        std::cout << "option was selected" << std::endl;
+        // Switch between objects based on selection
+        if (currentDimensionIndex == 2) {  // 4D
+            currentObject = &hypercube4D;
+        }
+        else if (currentDimensionIndex == 3) {  // 5D
+            currentObject = &hypercube5D;
+        }
+        // Can add more dimensions here as they're implemented
     }
     ImGui::Spacing();
     ImGui::Spacing();

@@ -139,8 +139,8 @@
     <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main-2.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\hypercube_objects.cpp" />
     <ClCompile Include="src\stb_implementation.cpp" />
     <ClCompile Include="src\vertex_data.cpp" />
   </ItemGroup>

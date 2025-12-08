@@ -5,6 +5,7 @@ layout(location = 1) in vec4 pos_group2;
 
 // nxn matrix
 uniform float rotationMat[25];
+uniform float scale;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -13,13 +14,13 @@ out vec3 fragColor;
 out vec3 fragPos;
 
 void main() {
-    // Extract position components
+    // Extract position components and apply scale
     float position[5];
-    position[0] = pos_group1.x;
-    position[1] = pos_group1.y;
-    position[2] = pos_group1.z;
-    position[3] = pos_group1.w;
-    position[4] = pos_group2.x;
+    position[0] = pos_group1.x * scale;
+    position[1] = pos_group1.y * scale;
+    position[2] = pos_group1.z * scale;
+    position[3] = pos_group1.w * scale;
+    position[4] = pos_group2.x * scale;
 
 	// manual mult
     float rotated5D[5];
