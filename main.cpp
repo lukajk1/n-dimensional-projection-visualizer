@@ -28,6 +28,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setImGuiElements();
 void initializeObjects();
+void cleanUpObjects();
 
 // settings
 unsigned int SCR_WIDTH = 1280;
@@ -174,27 +175,7 @@ int main()
         glfwPollEvents();
     }
 
-    hypercube2D.cleanup();
-    hypercube3D.cleanup();
-    hypercube4D.cleanup();
-    hypercube5D.cleanup();
-    hypercube6D.cleanup();
-    hypercube7D.cleanup();
-    hypercube8D.cleanup();
-    simplex2D.cleanup();
-    simplex3D.cleanup();
-    simplex4D.cleanup();
-    simplex5D.cleanup();
-    simplex6D.cleanup();
-    simplex7D.cleanup();
-    simplex8D.cleanup();
-    crossPolytope2D.cleanup();
-    crossPolytope3D.cleanup();
-    crossPolytope4D.cleanup();
-    crossPolytope5D.cleanup();
-    crossPolytope6D.cleanup();
-    crossPolytope7D.cleanup();
-    crossPolytope8D.cleanup();
+    cleanUpObjects();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -219,7 +200,7 @@ void setImGuiElements() {
     // family
     ImGui::Text("Family");
     ImGui::Spacing();
-    const char* shapesList[] = { "Hypercube", "Hypersphere", "Simplex", "Cross-Polytope" };
+    const char* shapesList[] = { "Hypercube", "Simplex", "Cross-Polytope" };
     if (ImGui::Combo("##Object", &shapesIndex, shapesList, IM_ARRAYSIZE(shapesList)))
     {
         updateCurrentObject();
@@ -309,20 +290,48 @@ void initializeObjects() {
     objectMap[{0, 6}] = &hypercube6D;
     objectMap[{0, 7}] = &hypercube7D;
     objectMap[{0, 8}] = &hypercube8D;
-    objectMap[{2, 2}] = &simplex2D;
-    objectMap[{2, 3}] = &simplex3D;
-    objectMap[{2, 4}] = &simplex4D;
-    objectMap[{2, 5}] = &simplex5D;
-    objectMap[{2, 6}] = &simplex6D;
-    objectMap[{2, 7}] = &simplex7D;
-    objectMap[{2, 8}] = &simplex8D;
-    objectMap[{3, 2}] = &crossPolytope2D;
-    objectMap[{3, 3}] = &crossPolytope3D;
-    objectMap[{3, 4}] = &crossPolytope4D;
-    objectMap[{3, 5}] = &crossPolytope5D;
-    objectMap[{3, 6}] = &crossPolytope6D;
-    objectMap[{3, 7}] = &crossPolytope7D;
-    objectMap[{3, 8}] = &crossPolytope8D;
+
+    objectMap[{1, 2}] = &simplex2D;
+    objectMap[{1, 3}] = &simplex3D;
+    objectMap[{1, 4}] = &simplex4D;
+    objectMap[{1, 5}] = &simplex5D;
+    objectMap[{1, 6}] = &simplex6D;
+    objectMap[{1, 7}] = &simplex7D;
+    objectMap[{1, 8}] = &simplex8D;
+
+    objectMap[{2, 2}] = &crossPolytope2D;
+    objectMap[{2, 3}] = &crossPolytope3D;
+    objectMap[{2, 4}] = &crossPolytope4D;
+    objectMap[{2, 5}] = &crossPolytope5D;
+    objectMap[{2, 6}] = &crossPolytope6D;
+    objectMap[{2, 7}] = &crossPolytope7D;
+    objectMap[{2, 8}] = &crossPolytope8D;
+}
+void cleanUpObjects() {
+
+    hypercube2D.cleanup();
+    hypercube3D.cleanup();
+    hypercube4D.cleanup();
+    hypercube5D.cleanup();
+    hypercube6D.cleanup();
+    hypercube7D.cleanup();
+    hypercube8D.cleanup();
+
+    simplex2D.cleanup();
+    simplex3D.cleanup();
+    simplex4D.cleanup();
+    simplex5D.cleanup();
+    simplex6D.cleanup();
+    simplex7D.cleanup();
+    simplex8D.cleanup();
+
+    crossPolytope2D.cleanup();
+    crossPolytope3D.cleanup();
+    crossPolytope4D.cleanup();
+    crossPolytope5D.cleanup();
+    crossPolytope6D.cleanup();
+    crossPolytope7D.cleanup();
+    crossPolytope8D.cleanup();
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
