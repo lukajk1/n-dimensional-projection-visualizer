@@ -29,6 +29,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setImGuiElements();
 void initializeObjects();
 void cleanUpObjects();
+void updateCurrentObject();
 
 // settings
 unsigned int SCR_WIDTH = 1280;
@@ -67,17 +68,6 @@ int currentDimensionIndex = 2;  // Dropdown index (0-6 maps to dimensions 2-8)
 // Map to store objects by (shapeType, dimension) key
 std::map<std::pair<int, int>, NDimObjectData*> objectMap;
 
-// Helper function to update current object based on shape and dimension selection
-void updateCurrentObject() {
-    int actualDimension = currentDimensionIndex + 2;  // Convert dropdown index to actual dimension (0->2, 1->3, etc.)
-    auto key = std::make_pair(shapesIndex, actualDimension);
-    auto it = objectMap.find(key);
-    if (it != objectMap.end()) {
-        currentObject = it->second;
-    } else {
-        std::cout << "No object found for shape " << shapesIndex << ", dimension " << actualDimension << std::endl;
-    }
-}
 
 int main()
 {
@@ -115,8 +105,6 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     initializeObjects();
-
-    // Set initial object to 3D hypercube
     currentObject = &hypercube4D;
 
     // render loop
@@ -332,6 +320,18 @@ void cleanUpObjects() {
     crossPolytope6D.cleanup();
     crossPolytope7D.cleanup();
     crossPolytope8D.cleanup();
+}
+// Helper function to update current object based on shape and dimension selection
+void updateCurrentObject() {
+    int actualDimension = currentDimensionIndex + 2;  // Convert dropdown index to actual dimension (0->2, 1->3, etc.)
+    auto key = std::make_pair(shapesIndex, actualDimension);
+    auto it = objectMap.find(key);
+    if (it != objectMap.end()) {
+        currentObject = it->second;
+    }
+    else {
+        std::cout << "No object found for shape " << shapesIndex << ", dimension " << actualDimension << std::endl;
+    }
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)

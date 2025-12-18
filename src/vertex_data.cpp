@@ -5484,7 +5484,6 @@ float crossPolytopeVerts_2D[] = {
 const size_t crossPolytopeVerts_2D_size = sizeof(crossPolytopeVerts_2D);
 
 // Stats: 4 vertices, 4 edges, 8 wireframe vertices
-
 // Regular 3-Cross-Polytope (Wireframe Pairs)
 // Dimension: 3
 // Total Vertices: 12
@@ -5573,7 +5572,6 @@ float crossPolytopeVerts_4D[] = {
 };
 const size_t crossPolytopeVerts_4D_size = sizeof(crossPolytopeVerts_4D);
 
-
 // Regular 5-Cross-Polytope (Wireframe Pairs)
 // Dimension: 5
 // Total Vertices: 40
@@ -5661,7 +5659,6 @@ float crossPolytopeVerts_5D[] = {
     0.0000f, 0.0000f, 0.0000f, 0.0000f, -1.0000f
 };
 const size_t crossPolytopeVerts_5D_size = sizeof(crossPolytopeVerts_5D);
-
 
 // Regular 6-Cross-Polytope (Wireframe Pairs)
 // Dimension: 6
@@ -5790,7 +5787,6 @@ float crossPolytopeVerts_6D[] = {
     0.0000f, 0.0000f, 0.0000f, 0.0000f, 0.0000f, -1.0000f
 };
 const size_t crossPolytopeVerts_6D_size = sizeof(crossPolytopeVerts_6D);
-
 
 // Regular 7-Cross-Polytope (Wireframe Pairs)
 // Dimension: 7
@@ -5967,7 +5963,6 @@ float crossPolytopeVerts_7D[] = {
     0.0000f, 0.0000f, 0.0000f, 0.0000f, 0.0000f, 0.0000f, -1.0000f
 };
 const size_t crossPolytopeVerts_7D_size = sizeof(crossPolytopeVerts_7D);
-
 
 // Regular 8-Cross-Polytope (Wireframe Pairs)
 // Dimension: 8

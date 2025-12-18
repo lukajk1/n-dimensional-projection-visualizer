@@ -22,7 +22,7 @@ RotationPlane rotations_4D[] = {
 RotationPlane rotations_5D[] = {
     {1, 3, 0.5f},  // YW plane rotation at 0.5 rad/s
     {0, 4, 0.3f}   // XV plane rotation at 0.3 rad/s
-};// 6D Hypercube Construction
+};
 RotationPlane rotations_6D[] = {
     {1, 3, 0.45f},  // YW plane rotation at 0.45 rad/s
     {0, 4, 0.35f},  // XV plane rotation at 0.35 rad/s
@@ -254,7 +254,7 @@ NDimObjectData simplex7D = {
     rotations_7D,       // defaultRotationPlanes
     3,                           // numRotationPlanes
     identity7D,                  // identityMatrix (will be initialized)
-    35.0f,                       // scale
+    120.0f,                       // scale
     true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
