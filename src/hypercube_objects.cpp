@@ -1,7 +1,6 @@
 #include "ndim_object.h"
 #include "vertex_data.h"
 
-// Identity matrices - one per dimension, shared by all objects of that dimension
 static float identity2D[4];
 static float identity3D[9];
 static float identity4D[16];
@@ -160,7 +159,6 @@ NDimObjectData hypercube8D = {
     "shaders/ws-coloring.f"         // shaderFragPath
 };
 
-
 NDimObjectData simplex2D = {
     simplexVerts_2D,           // vertices
     simplexVerts_2D_size,      // vertexDataSize
@@ -281,7 +279,6 @@ NDimObjectData simplex8D = {
     "shaders/ws-coloring.f"         // shaderFragPath
 };
 
-
 NDimObjectData crossPolytope2D = {
     crossPolytopeVerts_2D,       // vertices
     crossPolytopeVerts_2D_size,  // vertexDataSize
@@ -375,7 +372,7 @@ NDimObjectData crossPolytope7D = {
     rotations_7D,       // defaultRotationPlanes
     3,                           // numRotationPlanes
     identity7D,                  // identityMatrix (will be initialized)
-    35.0f,                       // scale
+    120.0f,                       // scale
     true,                        // renderEdges
     0,                           // VAO (will be set by setupBuffers)
     0,                           // VBO (will be set by setupBuffers)
